@@ -1,0 +1,93 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+	{#{dump()}#}
+
+
+{{ form_start(form) }}
+   
+<div class="row">
+	<div class="col-sm-6">{{ form_row(form.date) }}</div>
+	<div class="col-sm-6">{{ form_row(form.time) }}</div>
+</div>	
+
+<div class="row">
+	<div class="col-sm-6">{{ form_row(form.direction) }}</div>
+	<div class="col-sm-6">{{ form_row(form.quantity) }}</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">{{ form_row(form.comment) }}</div>
+</div>
+
+
+{% for price in form.prices %}
+
+<div class="row">
+	<div class="col-sm-6">{{ form_row(price.category) }}</div>
+	<div class="col-sm-6">{{ form_row(price.price) }}</div>
+</div>
+    
+
+{% endfor %}
+	
+	{{ form_widget(form) }}
+
+    <input class="btn btn-success" type="submit" value="Создать" />
+{{ form_end(form) }}	
+	
+{% endblock %}
+
+
+{% block javascripts %}
+<!-- Инициализация виджета "Bootstrap datetimepicker" -->
+<script type="text/javascript">
+  $(document).ready(function () {
+    //Идентификатор элемента HTML (например: #datetimepicker1), для которого необходимо инициализировать виджет "Bootstrap datetimepicker"
+    $('#cruisebundle_cruise_date').datetimepicker({
+	language: 'ru',
+	pickTime: false, 
+	format: 'YYYY-MM-DD', 
+	viewMode: 'months',
+
+	});
+    $('#cruisebundle_cruise_time').datetimepicker({language: 'ru',pickDate: false,minuteStepping:30, defaultDate:"10:00"});
+	
+	
+	
+	
+/*
+    var direction = $('#cruisebundle_cruise_direction');
+    // When sport gets selected ...
+    direction.change(function() {
+        // ... retrieve the corresponding form.
+        var form = $(this).closest('form');
+        // Simulate form data, but only include the selected sport value.
+        var data = {};
+        data[direction.attr('name')] = direction.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url : form.attr('action'),
+            type: form.attr('method'),
+            data : data,
+            success: function(html) {
+			
+			console.log(  html  );
+			
+                // Replace current position field ...
+                $('#cruisebundle_cruise_prices').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        
+						//html
+						
+						$(html).find('#cruisebundle_cruise_prices')
+                );
+                // Position field now displays the appropriate positions.
+            }
+        });
+    });
+	*/
+	
+  });
+</script>
+{% endblock %}

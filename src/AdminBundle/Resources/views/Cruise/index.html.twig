@@ -1,0 +1,35 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+	{{dump()}}
+	
+		<a class="btn btn-success" href="{{path('admin_cruise_new')}}">Добавить круиз</a>
+		<br>
+		<br>
+	
+	<table class="table">
+		<tr>
+			<th>Направление</th>
+			<th>Дата отправления</th>
+			<th>Время отправления</th>
+			<th>Мест для продажи</th>
+			<th>Осталось свободно</th>
+			<th>Комментарий</th>
+		</tr>
+
+
+	{% for cruise in cruises %}
+		
+		<tr>
+			<td>{{cruise.direction.name}}</td>
+			<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }}</td>
+			<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
+			<td>{{cruise.quantity}}</td>
+			<td></td>
+			<td>{{cruise.comment}}</td>
+		</tr>		
+	
+	{% endfor %}
+	</table>
+{% endblock %}

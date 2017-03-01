@@ -1,0 +1,10 @@
+admin:
+    resource: "@AdminBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
+cruise:
+    resource: "@CruiseBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

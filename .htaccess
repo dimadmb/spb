@@ -1,0 +1,37 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !^web/.*$
+RewriteRule ^(.*)$ web/$1 [QSA,L]
+
+php_value max_file_uploads 50
+
+
+
+
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+Header set Cache-Control "public"
+#Header set Expires "Fri, 23 Dec 2016 20:00:00 GMT"
+FileETag None
+</FilesMatch>
+
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access 10 days"
+ExpiresByType js/javascript "access plus 1 months"
+ExpiresByType css/css "access plus 1 months"
+ExpiresByType img/png "access plus 1 months"
+ExpiresByType img/jpg "access plus 1 months"
+ExpiresByType img/icon "access 1 months"
+ExpiresByType diagram/gif "now”
+</IfModule>

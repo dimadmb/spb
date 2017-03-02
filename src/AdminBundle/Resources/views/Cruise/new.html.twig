@@ -3,9 +3,12 @@
 {% block body %}
 	{#{dump()}#}
 
-
+{% form_theme form 'AdminBundle::jquery.collection.html.twig' %}
+ {{form(form)}}
+ 
+ {#
 {{ form_start(form) }}
-   
+  
 <div class="row">
 	<div class="col-sm-6">{{ form_row(form.date) }}</div>
 	<div class="col-sm-6">{{ form_row(form.time) }}</div>
@@ -21,6 +24,30 @@
 </div>
 
 
+<div  id="cruisebundle_cruise_prices" class="prices" data-prototype='<div class="row" id="cruisebundle_cruise_prices_prices">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label class="control-label" for="cruisebundle_cruise_prices_prices_category">Category</label><select class="form-control" id="cruisebundle_cruise_prices_1_category" name="cruisebundle_cruise[prices][prices][category]">
+				<option value="">
+				</option>
+				<option value="1">
+					Взрослый
+				</option>
+				<option value="2">
+					Детский
+				</option>
+				<option value="3">
+					Льготный
+				</option>
+			</select>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<label class="control-label" for="cruisebundle_cruise_prices_prices_price">Price</label><input class="form-control" id="cruisebundle_cruise_prices_prices_price" name="cruisebundle_cruise[prices][prices][price]" type="text">
+		</div>
+	</div>
+</div>'"{{ form_widget(form.prices.vars.prototype)|e('html_attr') }}" data-allow-add="1" data-allow-remove="1" data-prototype-name="prices" data-allow-add="1" data-allow-remove="1" data-name-prefix="cruisebundle_cruise[prices]">
 {% for price in form.prices %}
 
 <div class="row">
@@ -30,16 +57,24 @@
     
 
 {% endfor %}
+</div>
+
+
+
 	
 	{{ form_widget(form) }}
 
     <input class="btn btn-success" type="submit" value="Создать" />
 {{ form_end(form) }}	
-	
+	#}
 {% endblock %}
 
 
 {% block javascripts %}
+
+
+<script src="{{asset('js/jquery.collection.js')}}"></script>
+
 <!-- Инициализация виджета "Bootstrap datetimepicker" -->
 <script type="text/javascript">
   $(document).ready(function () {
@@ -55,39 +90,17 @@
 	
 	
 	
-	
-/*
-    var direction = $('#cruisebundle_cruise_direction');
-    // When sport gets selected ...
-    direction.change(function() {
-        // ... retrieve the corresponding form.
-        var form = $(this).closest('form');
-        // Simulate form data, but only include the selected sport value.
-        var data = {};
-        data[direction.attr('name')] = direction.val();
-        // Submit data via AJAX to the form's action path.
-        $.ajax({
-            url : form.attr('action'),
-            type: form.attr('method'),
-            data : data,
-            success: function(html) {
-			
-			console.log(  html  );
-			
-                // Replace current position field ...
-                $('#cruisebundle_cruise_prices').replaceWith(
-                        // ... with the returned one from the AJAX response.
-                        
-						//html
-						
-						$(html).find('#cruisebundle_cruise_prices')
-                );
-                // Position field now displays the appropriate positions.
-            }
-        });
-    });
-	*/
+	$('.prices').collection({
+		prototype_name: '{{ form.prices.vars.prototype.vars.name }}',		
+		name_prefix :   ' {{form.prices.vars.full_name}} ' ,
+		//allow_duplicate:true
+	});
+
 	
   });
+  
+
+  
+  
 </script>
 {% endblock %}

@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 use Symfony\Component\Form\FormInterface;
@@ -43,6 +44,25 @@ class CruiseType extends AbstractType
             'entry_type' => PriceType::class
         ));
 		*/
+		
+		$builder->add('prices', CollectionType::class, array(
+            'entry_type' => \CruiseBundle\Form\PriceType::class, 
+			//'data' => $cruise->getPrices(),
+			
+			'allow_add' => true,
+			'allow_extra_fields' => true,
+			'allow_delete' => true,
+			'prototype' => true,
+			'prototype_name' => 'prices',
+			'attr' => array(
+					'class' => 'prices',
+			),
+			'by_reference' => false,
+			
+        ));	
+
+		$builder->add('submit', SubmitType::class); 
+		
     }
     
     /**

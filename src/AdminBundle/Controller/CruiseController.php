@@ -74,15 +74,15 @@ class CruiseController extends Controller
 		}		
 		
 		$form = $this->createForm('CruiseBundle\Form\CruiseType', $cruise);
-		
+		/*
 		$form->add('prices', CollectionType::class, array(
             'entry_type' => \CruiseBundle\Form\PriceType::class, 'data' => $cruise->getPrices()
         ));
-
+*/
         $form->handleRequest($request);	
 
 		
-		if ($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() /*&& $form->isValid()*/) {
 			$em = $this->getDoctrine()->getManager();
 			
 			foreach($cruise->getPrices() as $price)

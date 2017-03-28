@@ -16,8 +16,8 @@ class PriceType extends AbstractType
         $builder
 			
 			//->add('cruise')
-			->add('category') 
-			->add('price')
+			->add('category',null, ['label'=> 'Категория пассажира' , 'required' => true])  
+			->add('price',null , ['label'=> 'Цена', 'required' => true ])
 		;
     }
     

@@ -4,9 +4,9 @@
 	{#{dump()}#}
 
 {% form_theme form 'AdminBundle::jquery.collection.html.twig' %}
- {{form(form)}}
+ {#{form(form)}#}
  
- {#
+ 
 {{ form_start(form) }}
   
 <div class="row">
@@ -24,49 +24,28 @@
 </div>
 
 
-<div  id="cruisebundle_cruise_prices" class="prices" data-prototype='<div class="row" id="cruisebundle_cruise_prices_prices">
-	<div class="col-sm-6">
-		<div class="form-group">
-			<label class="control-label" for="cruisebundle_cruise_prices_prices_category">Category</label><select class="form-control" id="cruisebundle_cruise_prices_1_category" name="cruisebundle_cruise[prices][prices][category]">
-				<option value="">
-				</option>
-				<option value="1">
-					Взрослый
-				</option>
-				<option value="2">
-					Детский
-				</option>
-				<option value="3">
-					Льготный
-				</option>
-			</select>
-		</div>
-	</div>
-	<div class="col-sm-6">
-		<div class="form-group">
-			<label class="control-label" for="cruisebundle_cruise_prices_prices_price">Price</label><input class="form-control" id="cruisebundle_cruise_prices_prices_price" name="cruisebundle_cruise[prices][prices][price]" type="text">
-		</div>
-	</div>
-</div>'"{{ form_widget(form.prices.vars.prototype)|e('html_attr') }}" data-allow-add="1" data-allow-remove="1" data-prototype-name="prices" data-allow-add="1" data-allow-remove="1" data-name-prefix="cruisebundle_cruise[prices]">
-{% for price in form.prices %}
 
+
+{% macro widget_prototype(price) %}
 <div class="row">
-	<div class="col-sm-6">{{ form_row(price.category) }}</div>
-	<div class="col-sm-6">{{ form_row(price.price) }}</div>
+	<div class="col-sm-4">{{ form_row(price.category) }}</div>
+	<div class="col-sm-4">{{ form_row(price.price) }}</div>
 </div>
-    
+{% endmacro %}
 
+<div  id="cruisebundle_cruise_prices" class="prices" data-prototype="{{ _self.widget_prototype(form.prices.vars.prototype)|e }}" data-allow-add="1" data-allow-remove="1" data-prototype-name="{{(form.prices.vars.prototype.vars.name)}}" data-allow-add="1" data-allow-remove="1" data-name-prefix="{{form.prices.vars.full_name}}">
+
+{% for price in form.prices %}
+	{{ _self.widget_prototype(price) }}
 {% endfor %}
 </div>
 
 
-
-	
-	{{ form_widget(form) }}
+{{ form_widget(form) }}
 
     <input class="btn btn-success" type="submit" value="Создать" />
 {{ form_end(form) }}	
-	#}
+	
 {% endblock %}
 
 

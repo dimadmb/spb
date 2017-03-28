@@ -32,11 +32,11 @@ class CruiseType extends AbstractType
     {
         
 		$builder
-			->add('date',null,['widget'=>'single_text','html5' => false, ])
-			->add('time',null,['widget'=>'single_text','html5' => false, ])
-			->add('comment')
-			->add('quantity')
-			->add('direction')  
+			->add('date',null,['widget'=>'single_text','html5' => false, 'label'=> 'Дата отправления' ])
+			->add('time',null,['widget'=>'single_text','html5' => false, 'label'=> 'Время отправления'])
+			->add('comment',null,['label'=>'Комментарий к рейсу'])
+			->add('quantity',null, ['label'=> 'Количество мест для продажи'] )
+			->add('direction',null, ['label' => 'Направление','required'  => true])  
 		;
 		
 		/*
@@ -44,7 +44,7 @@ class CruiseType extends AbstractType
             'entry_type' => PriceType::class
         ));
 		*/
-		
+	
 		$builder->add('prices', CollectionType::class, array(
             'entry_type' => \CruiseBundle\Form\PriceType::class, 
 			//'data' => $cruise->getPrices(),
@@ -53,7 +53,7 @@ class CruiseType extends AbstractType
 			'allow_extra_fields' => true,
 			'allow_delete' => true,
 			'prototype' => true,
-			'prototype_name' => 'prices',
+			'prototype_name' => 'collection', 
 			'attr' => array(
 					'class' => 'prices',
 			),
@@ -61,7 +61,7 @@ class CruiseType extends AbstractType
 			
         ));	
 
-		$builder->add('submit', SubmitType::class); 
+		//$builder->add('submit', SubmitType::class); 
 		
     }
     

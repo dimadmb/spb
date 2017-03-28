@@ -35,7 +35,7 @@ class Price
 
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Category")
+	 * @ORM\ManyToOne(targetEntity="Category", fetch="EAGER")
 	 */
 	private $category;
 

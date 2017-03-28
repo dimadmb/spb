@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CruiseBundle\Entity\Cruise;
 use CruiseBundle\Entity\Price;
 
+
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
@@ -32,7 +34,7 @@ class CruiseController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $cruises = $em->getRepository('CruiseBundle:Cruise')->findAll();
+        $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy([],['id' => 'DESC']);
 		
 		return ['cruises'=>$cruises];
     }
@@ -68,21 +70,16 @@ class CruiseController extends Controller
 		{
 			$price = new Price();
 			$price->setCategory($category);
-			//$price->setPrice('5');
 			$cruise->getPrices()->add($price);
-			//$this->getDoctrine()->getManager()->persist($price);
 		}		
 		
 		$form = $this->createForm('CruiseBundle\Form\CruiseType', $cruise);
-		/*
-		$form->add('prices', CollectionType::class, array(
-            'entry_type' => \CruiseBundle\Form\PriceType::class, 'data' => $cruise->getPrices()
-        ));
-*/
+
+		
         $form->handleRequest($request);	
 
 		
-		if ($form->isSubmitted() /*&& $form->isValid()*/) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			$em = $this->getDoctrine()->getManager();
 			
 			foreach($cruise->getPrices() as $price)
@@ -94,6 +91,9 @@ class CruiseController extends Controller
 			
 			$em->persist($cruise);
 			$em->flush();
+			
+			return $this->redirectToRoute('admin_cruise_index');
+			
 		}
 		
 		

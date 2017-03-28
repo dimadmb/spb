@@ -38,7 +38,11 @@ class Price
 	 * @ORM\ManyToOne(targetEntity="Category", fetch="EAGER")
 	 */
 	private $category;
-
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="price")
+	 */
+	private $roundTrip;
 
     /**
      * Get id

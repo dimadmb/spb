@@ -31,7 +31,12 @@ class PriceDefault
 	/**
 	 * @ORM\ManyToOne(targetEntity="Category" , inversedBy="priceDefault")
 	 */
-	private $category;
+	private $category;	
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="priceDefault")
+	 */
+	private $roundTrip;
 	
     /**
      * @var string

@@ -15,9 +15,10 @@
 			<th>Дата отправления</th>
 			<th>Время отправления</th>
 			<th>Мест для продажи</th>
-			<th>Цены</th>
+			<th style="min-width: 250px;">Цены</th>
 			<th>Осталось свободно</th>
 			<th>Комментарий</th>
+			<th></th>
 		</tr>
 
 
@@ -31,11 +32,12 @@
 			<td>{{cruise.quantity}}</td>
 			<td>
 			{% for price in cruise.prices %}
-				{{price.category.name}} <span style="float:right; font-weight:700; ">{{price.price | number_format(0, '.', ' ') }} руб.</span><br>
+				{{price.category.name}} {{price.roundTrip.name}}  <span style="float:right; font-weight:700; ">{{price.price | number_format(0, '.', ' ') }} руб.</span><br>
 			{% endfor %}
 			</td>
 			<td></td>
 			<td>{{cruise.comment}}</td>
+			<td><a href="{{path('admin_cruise_edit',{'id':cruise.id})}}" class="btn btn-success">Редактировать</a></td>
 		</tr>		
 	
 	{% endfor %}

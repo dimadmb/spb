@@ -59,7 +59,7 @@ class Cruise
 	
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Price", mappedBy="cruise")
+	 * @ORM\OneToMany(targetEntity="Price", mappedBy="cruise", fetch="EAGER")
 	 */
 	private $prices; 
 

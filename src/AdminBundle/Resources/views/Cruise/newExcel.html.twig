@@ -1,0 +1,46 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+	
+
+<form action="{{path('admin_cruise_new_excel')}}" enctype="multipart/form-data" method="POST">
+
+<input type="text" id="cruisebundle_cruise_date" name="cruisebundle_cruise[date]" required="required" class="form-control">
+<br>
+
+	<input name="file" type="file">
+	<input type="submit">
+</form>
+
+
+	{{dump(dump)}}
+
+	
+{% endblock %}
+
+{% block javascripts %}
+
+
+<script src="{{asset('js/jquery.collection.js')}}"></script>
+
+<!-- Инициализация виджета "Bootstrap datetimepicker" -->
+<script type="text/javascript">
+  $(document).ready(function () {
+    //Идентификатор элемента HTML (например: #datetimepicker1), для которого необходимо инициализировать виджет "Bootstrap datetimepicker"
+    $('#cruisebundle_cruise_date').datetimepicker({
+	language: 'ru',
+	pickTime: false, 
+	format: 'YYYY-MM-DD', 
+	viewMode: 'months',
+
+	});
+
+
+	
+  });
+  
+
+  
+  
+</script>
+{% endblock %}

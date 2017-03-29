@@ -17,6 +17,7 @@ class PriceType extends AbstractType
 			
 			//->add('cruise')
 			->add('category',null, ['label'=> 'Категория пассажира' , 'required' => true])  
+			->add('roundTrip',null , ['label'=> 'Возвратный', 'required' => true ])
 			->add('price',null , ['label'=> 'Цена', 'required' => true ])
 		;
     }

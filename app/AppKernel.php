@@ -17,6 +17,9 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new CruiseBundle\CruiseBundle(),
             new AdminBundle\AdminBundle(),
+			
+			new Liuggio\ExcelBundle\LiuggioExcelBundle(),			
+			
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

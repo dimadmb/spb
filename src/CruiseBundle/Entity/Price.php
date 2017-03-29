@@ -127,4 +127,28 @@ class Price
     {
         return $this->cruise;
     }
+
+    /**
+     * Set roundTrip
+     *
+     * @param \CruiseBundle\Entity\RoundTrip $roundTrip
+     *
+     * @return Price
+     */
+    public function setRoundTrip(\CruiseBundle\Entity\RoundTrip $roundTrip = null)
+    {
+        $this->roundTrip = $roundTrip;
+
+        return $this;
+    }
+
+    /**
+     * Get roundTrip
+     *
+     * @return \CruiseBundle\Entity\RoundTrip
+     */
+    public function getRoundTrip()
+    {
+        return $this->roundTrip;
+    }
 }

@@ -59,7 +59,7 @@ class Cruise
 	
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Price", mappedBy="cruise", fetch="EAGER")
+	 * @ORM\OneToMany(targetEntity="Price", mappedBy="cruise", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
 	private $prices; 
 

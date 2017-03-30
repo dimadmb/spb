@@ -41,6 +41,10 @@ class CruiseController extends Controller
 		return ['cruises'=>$cruises];
     }
 
+
+
+
+	
 	
 	
     /**
@@ -54,6 +58,11 @@ class CruiseController extends Controller
 	{
         $cruise = $this->getDoctrine()->getRepository("CruiseBundle:Cruise")->findOneById($id);
 		
+#		//$fff = $cruise->getPrices();
+#		foreach($cruise->getPrices() as $p)
+#		{
+#			$cruise->removePrice($p);
+#		}
 	
 		$form = $this->createForm('CruiseBundle\Form\CruiseType', $cruise);
 
@@ -64,6 +73,8 @@ class CruiseController extends Controller
 		if ($form->isSubmitted() && $form->isValid()) {
 			$em = $this->getDoctrine()->getManager();
 			
+			
+			
 			foreach($cruise->getPrices() as $price)
 			{
 				
@@ -73,6 +84,8 @@ class CruiseController extends Controller
 			
 			$em->persist($cruise);
 			$em->flush();
+			
+			//return ['form'=>$form->createView() , $cruise];
 			
 			return $this->redirectToRoute('admin_cruise_index');
 			

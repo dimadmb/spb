@@ -1,0 +1,32 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Список категорий пассажров</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Назначается по умолчанию</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td><a href="{{ path('category_show', { 'id': category.id }) }}">{{ category.id }}</a></td>
+                <td>{{ category.name }}</td>
+                <td>{% if category.isDefault %}Да{% else %}Нет{% endif %}</td>
+                <td>
+                    <a href="{{ path('category_edit', { 'id': category.id }) }}">Редактировать</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+        <a class="btn btn-success" href="{{ path('category_new') }}">Создать новую категорию пассажиров</a>
+
+{% endblock %}

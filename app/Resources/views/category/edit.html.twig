@@ -1,0 +1,20 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Редактирование категории пассажиров</h1>
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+        <input  class="btn btn-success"  type="submit" value="Редактировать" />
+    {{ form_end(edit_form) }}
+
+			<br>
+            <a class="btn btn-default" href="{{ path('category_index') }}">Вернуться к списку категорий</a>
+			<br>
+			<br>
+
+            {{ form_start(delete_form) }}
+                <input class="btn btn-danger" type="submit" value="Удалить">
+            {{ form_end(delete_form) }}
+
+{% endblock %}

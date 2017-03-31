@@ -23,18 +23,18 @@ class PriceDefault
 
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Direction" , inversedBy="priceDefault")
+	 * @ORM\ManyToOne(targetEntity="Direction" , inversedBy="priceDefault", fetch="EAGER" )
 	 */
 	private $direction;
 	
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Category" , inversedBy="priceDefault")
+	 * @ORM\ManyToOne(targetEntity="Category" , inversedBy="priceDefault", fetch="EAGER" )
 	 */
 	private $category;	
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="priceDefault")
+	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="priceDefault", fetch="EAGER" )
 	 */
 	private $roundTrip;
 	

@@ -5,15 +5,16 @@
 
 <form action="{{path('admin_cruise_new_excel')}}" enctype="multipart/form-data" method="POST">
 
+<label class="control-label required" for="cruisebundle_cruise_date">Дата отправления</label>
 <input type="text" id="cruisebundle_cruise_date" name="cruisebundle_cruise[date]" required="required" class="form-control">
 <br>
 
-	<input name="file" type="file">
+	<input name="file" required="required" type="file">
 	<input type="submit">
 </form>
 
 
-	{{dump(dump)}}
+	{#{dump(dump)}#}
 
 	
 {% endblock %}

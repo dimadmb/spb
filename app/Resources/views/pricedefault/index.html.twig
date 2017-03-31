@@ -1,0 +1,39 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+
+
+
+    <h1>Список назначаемых цен по умолчанию</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Направление</th>
+                <th>Категория</th>
+                <th>Возвратный</th>
+                <th>Цена</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for priceDefault in priceDefaults %}
+            <tr>
+                <td><a href="{{ path('pricedefault_show', { 'id': priceDefault.id }) }}">{{ priceDefault.id }}</a></td>
+				<td>{{priceDefault.direction.name}}</td>
+				<td>{{priceDefault.category.name}}</td>
+				<td>{{priceDefault.roundTrip.name}}</td>
+                <td>{{ priceDefault.price }}</td>
+                <td>
+                    <a href="{{ path('pricedefault_edit', { 'id': priceDefault.id }) }}">Редактировать</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+        <a class="btn btn-success" href="{{ path('pricedefault_new') }}">Создать новый Прайс по умолчанию</a>
+
+{% endblock %}

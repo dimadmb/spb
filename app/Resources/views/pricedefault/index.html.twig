@@ -10,7 +10,6 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Направление</th>
                 <th>Категория</th>
                 <th>Возвратный</th>
                 <th>Цена</th>
@@ -21,7 +20,6 @@
         {% for priceDefault in priceDefaults %}
             <tr>
                 <td><a href="{{ path('pricedefault_show', { 'id': priceDefault.id }) }}">{{ priceDefault.id }}</a></td>
-				<td>{{priceDefault.direction.name}}</td>
 				<td>{{priceDefault.category.name}}</td>
 				<td>{{priceDefault.roundTrip.name}}</td>
                 <td>{{ priceDefault.price }}</td>

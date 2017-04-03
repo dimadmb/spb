@@ -22,10 +22,6 @@ class PriceDefault
     private $id;
 
 	
-	/**
-	 * @ORM\ManyToOne(targetEntity="Direction" , inversedBy="priceDefault", fetch="EAGER" )
-	 */
-	private $direction;
 	
 	
 	/**

@@ -28,10 +28,6 @@ class Direction
      */
     private $name;
 	
-	/**
-	 * @ORM\OneToMany(targetEntity="PriceDefault", mappedBy="direction")
-	 */
-	private $priceDefault;	
 
 
 	public function __toString()
@@ -72,45 +68,6 @@ class Direction
     {
         return $this->name;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->priceDefault = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
-    /**
-     * Add priceDefault
-     *
-     * @param \CruiseBundle\Entity\PriceDefault $priceDefault
-     *
-     * @return Direction
-     */
-    public function addPriceDefault(\CruiseBundle\Entity\PriceDefault $priceDefault)
-    {
-        $this->priceDefault[] = $priceDefault;
 
-        return $this;
-    }
-
-    /**
-     * Remove priceDefault
-     *
-     * @param \CruiseBundle\Entity\PriceDefault $priceDefault
-     */
-    public function removePriceDefault(\CruiseBundle\Entity\PriceDefault $priceDefault)
-    {
-        $this->priceDefault->removeElement($priceDefault);
-    }
-
-    /**
-     * Get priceDefault
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPriceDefault()
-    {
-        return $this->priceDefault;
-    }
 }

@@ -13,7 +13,7 @@ class PriceDefaultType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price')->add('direction')->add('category')->add('roundTrip')        ;
+        $builder->add('price')->add('category')->add('roundTrip')        ;
     }
     
     /**

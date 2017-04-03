@@ -126,7 +126,7 @@ class CruiseController extends Controller
 			$priceDefaults = $em->getRepository("CruiseBundle:PriceDefault")->findAll();
 			foreach($priceDefaults as $priceDefault)
 			{
-				$priceDefault_arr[$priceDefault->getDirection()->getId()][$priceDefault->getRoundTrip()->getId()][$priceDefault->getCategory()->getId()] = $priceDefault->getPrice();
+				$priceDefault_arr[$priceDefault->getRoundTrip()->getId()][$priceDefault->getCategory()->getId()] = $priceDefault->getPrice();
 			}
 			$roundTrips = $em->getRepository("CruiseBundle:RoundTrip")->findAll();
 			foreach($roundTrips as $roundTrip)
@@ -153,7 +153,7 @@ class CruiseController extends Controller
 					$cruise->setDirection($direction_arr[1]);
 					$em->persist($cruise);
 					
-					foreach($priceDefault_arr[1] as $RT_id => $priceDefaultRoundTrip)
+					foreach($priceDefault_arr as $RT_id => $priceDefaultRoundTrip)
 					{
 						foreach($priceDefaultRoundTrip as $cat_id => $priceDefaultCategory)
 						{
@@ -185,7 +185,7 @@ class CruiseController extends Controller
 					$cruise->setDirection($direction_arr[2]);
 					$em->persist($cruise);
 					
-					foreach($priceDefault_arr[2] as $RT_id => $priceDefaultRoundTrip)
+					foreach($priceDefault_arr as $RT_id => $priceDefaultRoundTrip)
 					{
 						foreach($priceDefaultRoundTrip as $cat_id => $priceDefaultCategory)
 						{
@@ -243,7 +243,7 @@ class CruiseController extends Controller
 		
 		//$direction = $this->getDoctrine()->getRepository('CruiseBundle:Direction')->findOneById(1);
 
-		$priceDefaults = $this->getDoctrine()->getRepository('CruiseBundle\Entity\PriceDefault')->findByDirection(1);
+		$priceDefaults = $this->getDoctrine()->getRepository('CruiseBundle\Entity\PriceDefault')->findAll();
 
 		foreach($priceDefaults as $priceDefault)
 		{

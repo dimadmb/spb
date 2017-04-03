@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Cruise
  *
- * @ORM\Table(name="cruise")
+ * @ORM\Table(name="cruise", uniqueConstraints={@ORM\UniqueConstraint(name="direction_date_time", columns={"direction_id", "date", "time"})})
  * @ORM\Entity(repositoryClass="CruiseBundle\Repository\CruiseRepository")
  */
 class Cruise

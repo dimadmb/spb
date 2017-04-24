@@ -1,0 +1,58 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+<br>	
+<br>	
+<br>	
+<br>	
+<br>	
+<br>	
+<br>
+
+{{dump()}}	
+
+
+<table class="table">
+	<tr>
+		<td>Номер заказа </td>
+		<td>{{order.id}}</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table class="table">
+		{% set summa = 0 %}			
+	{% for orderCruise in order.orderCruise %}
+				<tr>
+					<td>
+					
+			{{orderCruise.cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}	
+			&nbsp;&nbsp;&nbsp;
+
+			{{orderCruise.cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{{orderCruise.cruise.direction.name}}					
+			{{orderCruise.cruise.id}}					
+					
+					</td>
+					<td>{{orderCruise.category.name}}</td>
+					<td>{{orderCruise.price}}</td>
+					<td>{{orderCruise.count}}</td>
+					<td>{{orderCruise.roundTrip.name}}</td>
+				</tr>
+				
+			{% set summa = summa + (orderCruise.price * orderCruise.count) %}	
+	{% endfor %}
+	
+	<tr>
+		<th colspan="2" style="text-align:right;"> Итого: </th>
+		<th colspan="3"> {{summa}} </th>
+	</tr>
+				
+			</table>
+		</td>
+	</tr>	
+
+</table>
+
+
+{% endblock %}

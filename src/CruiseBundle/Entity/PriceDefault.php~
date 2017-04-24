@@ -22,19 +22,15 @@ class PriceDefault
     private $id;
 
 	
-	/**
-	 * @ORM\ManyToOne(targetEntity="Direction" , inversedBy="priceDefault")
-	 */
-	private $direction;
 	
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Category" , inversedBy="priceDefault")
+	 * @ORM\ManyToOne(targetEntity="Category" , inversedBy="priceDefault", fetch="EAGER" )
 	 */
 	private $category;	
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="priceDefault")
+	 * @ORM\ManyToOne(targetEntity="RoundTrip" , inversedBy="priceDefault", fetch="EAGER" )
 	 */
 	private $roundTrip;
 	
@@ -126,5 +122,29 @@ class PriceDefault
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Set roundTrip
+     *
+     * @param \CruiseBundle\Entity\RoundTrip $roundTrip
+     *
+     * @return PriceDefault
+     */
+    public function setRoundTrip(\CruiseBundle\Entity\RoundTrip $roundTrip = null)
+    {
+        $this->roundTrip = $roundTrip;
+
+        return $this;
+    }
+
+    /**
+     * Get roundTrip
+     *
+     * @return \CruiseBundle\Entity\RoundTrip
+     */
+    public function getRoundTrip()
+    {
+        return $this->roundTrip;
     }
 }

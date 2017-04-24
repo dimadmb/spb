@@ -38,6 +38,11 @@ class CruiseController extends Controller
 
         $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy([],['id' => 'DESC']);
 		
+		foreach($cruises as $cruise)
+		{
+			$cruise->freeCount = $em->getRepository('CruiseBundle:OrderCruise')->getFreeCountPlace($cruise->getId());
+		}
+		
 		return ['cruises'=>$cruises];
     }
 

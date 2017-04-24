@@ -18,7 +18,9 @@ class AppKernel extends Kernel
             new CruiseBundle\CruiseBundle(),
             new AdminBundle\AdminBundle(),
 			
-			new Liuggio\ExcelBundle\LiuggioExcelBundle(),			
+			new Liuggio\ExcelBundle\LiuggioExcelBundle(),		
+
+			new FOS\UserBundle\FOSUserBundle(),			
 			
         ];
 

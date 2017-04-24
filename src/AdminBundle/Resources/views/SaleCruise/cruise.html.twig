@@ -1,0 +1,58 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+	
+	
+<p>{{cruise.direction}}</p>	
+<p>
+{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} 
+{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}
+
+</p>	
+	
+
+<p>Заказы</p>
+
+
+<table class="table">
+
+<tr>
+	<th>Направление</th>
+	<th>Категория пассажира</th>
+	<th>Количество билетов</th>
+	<th>Цена</th>
+	<th>Стоимость</th>
+	<th>Дата заказа</th>
+	<th>Покупатель</th>
+</tr>
+{% set itogo = 0 %}
+{% for orderCruise in cruise.orderCruise %}
+{% set itogo = itogo +  orderCruise.price * orderCruise.count %}
+	<tr>
+		<td>{{orderCruise.roundTrip.name}}</td>
+		<td>{{orderCruise.category.name}}</td>
+		<td>{{orderCruise.count}}</td>
+		<td>{{orderCruise.price}}</td>
+		<td>{{orderCruise.price * orderCruise.count}}</td>
+		<td>{{orderCruise.ordering.date | localizeddate('full', 'none', null, null, 'dd MMM Y HH : mm')}}</td>
+		<td>
+		{{orderCruise.ordering.name}}<br>
+		{{orderCruise.ordering.email}}<br>
+		{{orderCruise.ordering.phone}}
+		</td>
+	</tr>
+	
+{% endfor %}
+
+<tr>
+	<td></td>
+	<td></td>
+	<td><b>Итого</b></td>
+	<td><b>{{itogo}}</b></td>
+	<td></td>
+	<td></td>
+</tr>	
+</table>	
+{{dump()}}
+{% endblock %}	

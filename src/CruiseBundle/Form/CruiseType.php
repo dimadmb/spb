@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
 
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -37,6 +39,7 @@ class CruiseType extends AbstractType
 			->add('comment',null,['label'=>'Комментарий к рейсу'])
 			->add('quantity',null, ['label'=> 'Количество мест для продажи'] )
 			->add('direction',null, ['label' => 'Направление','required'  => true])  
+			->add('active',CheckboxType::class,['label'=>'Круиз активен'])
 		;
 		
 		/*

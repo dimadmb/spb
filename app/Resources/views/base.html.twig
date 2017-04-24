@@ -1,25 +1,170 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{asset('css/style.css')}}">
+	<link rel="stylesheet" href="{{asset('css/style-dop.css')}}">
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<!--[if lt IE 9]> 
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> 
+	<![endif]-->
+	
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />	
+    <title>{% block title %}Welcome!{% endblock %}</title>
+</head>
+<body>
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">		
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
 
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>		
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>		
+	<div class="div_toper">
+		<div class="wrap">
+			<div class="div_navigate">
+				<span><a href="/agency/agency/" style="font-size: 15px; font-weight: 900; text-transform:none;">Агентствам</a></span>
+				<span style="margin-left:60px;"> <a href="/map.htm" title="Карта сайта"><img src="{{asset('img/icon-sitemap.gif')}}" title="Карта сайта" alt="Карта сайта"></a></span>
+			</div>		
+			<div class="div_phone_800">Телефон для частных лиц. Звонок по России бесплатный: <a href="tel:+78005550505"><span>8-800-555-05-05</span></a></div>
+				<div class="social_links">
+					ВодоходЪ в соцсетях: <a target="_blank" href="http://vk.com/club221698"><img src="{{asset('img/vk.png')}}" alt="вконтакте" title="вконтакте"></a> <a target="_blank" href="https://www.facebook.com/groups/264166777089408/"><img src="{{asset('img/fb.png')}}" alt="facebook" title="facebook"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<header class="header">
+		<div class="wrap">
+			<div class="phones">
+				круизы частным лицам: <i class="main">+7 812 <span>740-58-58</span></i><br/>
+				круизы для агентств: +7 812 <span>740-58-58</span><br/>
+				скоростной флот: +7 812 <span>740-58-58</span>
+			</div>
+			<div class="metro">
+				Санкт-Петербург: <a href="#">Пролетарская</a>, <a href="#">Площадь Восстания</a>, <a href="#">Садовая</a>, <a href="#">Комендантский</a>
+			</div>
+			<div class="logo">
+				<a href="/"><img src="{{asset('img/logo.png')}}"> Скоростной флот в Петергоф</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</header>
+	<div class="wrap">
+		<div class="menu">
+			<div class="menuli m_1">
+				<a href="/cruises/vodohod/">Речные круизы <br> по России</a>
+				<div class="submenu">
+					<ul>
+						<li>Круизы из Санкт-Петербурга на <a href="/cruises/itineraries/valaam/">Валаам</a>, <a href="/cruises/itineraries/kizhi/">Кижи</a></li>
+						<li>Круизы по <a href="/cruises/itineraries/po_volge/">Волге</a>, <a href="/cruises/itineraries/po_kame/">Каме</a></li>
+						<li><a href="/cruises/itineraries/weekend/"><span>Круизы выходного дня</span></a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="menuli m_2">
+				<a href="/our_fleet/">Наш <br>круизный флот</a>
+				<div class="submenu">
+					<ul> 
+						<li><a href="/our_fleet/arenda-teplohoda/">Аренда теплохода</a></li> 
+						<li><a href="/our_fleet/classes/">Классы теплоходов</a></li> 
+						<li><a href="/our_fleet/port/">Маршрутные пункты</a></li> 
+						<li><a href="/our_fleet/ports/">Причалы</a></li>  
+			        </ul>
+				</div>
+	        </div>
+			<div class="menuli m_3">
+				<a href="/info/">Нашим<br> клиентам</a>
+				<div class="submenu">
+					<ul> 
+						 <li><a href="http://vodohod.com/cruises/order/">Интернет-магазин</a></li>
+						 <li><a href="/info/plus/">Круиз +</a></li>
+						 <li><a href="/info/bonus/">ВодоходЪ Бонус</a></li>
+						 <li><a href="/info/safety/">Безопасность на борту</a></li>
+						 <li><a href="/info/faq/">Часто задаваемые вопросы</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="menuli m_4">
+				<a href="/smallfleet/">Скоростной флот <br>в Петергоф</a>
+				<div class="submenu">
+					<ul> 
+						<li><a href="/smallfleet/meteory/">О скоростном флоте</a></li> 
+						<li><a href="/smallfleet/ports/">Причалы</a></li> 
+						<li><a href="/smallfleet/raspisanie/">Расписание и цены</a></li> 
+						<li><a href="/smallfleet/info/">Полезная информация</a></li> 
+					</ul>
+				</div>
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		
+		{% block body %}{% endblock %}
+		{% block mainContent %}	 {% endblock %}
 
-        {% block javascripts %}{% endblock %}
-    </body>
+
+		<div class="clear"></div>
+	<div class="info"> 		
+
+		<img src="{{asset('img/info_fon.png')}}" alt=""> 
+      <div class="infomenu"> 						 
+        <h2><a href="/about/">О компании</a></h2>
+       
+        <table> 
+          <tbody> 
+            <tr><td style="vertical-align: top;"> 
+                <ul> 							 
+
+                  <li><a href="/about/news/">Новости</a></li>						 
+                  <li><a href="/about/contacts/">Контакты</a></li>
+                  <li><a href="/about/life-vodohod/">Жизнь «Водохода»</a></li>
+                  <li><a href="/about/video/">Видеотека</a></li>
+
+				</ul>
+
+               </td> <td style="vertical-align: top;">
+			   
+				<ul style="margin-left:30px ">
+				  <li><a href="/about/fotoarhiv/">Фотоархив</a></li>
+				  <li><a href="/about/feedback/">Обратная связь</a></li>
+				  <li><a href="/about/legal/">Юридическая информация</a></li>
+
+				  <li><a href="http://cruizi-spb.ru" target="_blank">Дружественный форум</a></li>
+                </ul>
+			  </td></tr>
+           </tbody>
+         </table>
+
+		<div class="container">
+			<div class="row">
+			
+			<div>
+				{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+					
+					
+					{#{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }#}
+					Вы вошли как <a href="{{path('fos_user_profile_show')}}">{{app.user.username}}</a>
+					|
+					<a href="{{ path('fos_user_security_logout') }}">
+						{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+					</a>
+				{% else %}
+				   <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+				{% endif %}
+			</div>			
+
+			</div>
+		</div>
+
+		 
+       </div>
+     </div>
+	</div>
+	
+	
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="{{asset('js/jquery.selectBox.js')}}"></script>
+	<script src="{{asset('js/common.js')}}"></script>
+
+    {% block javascripts %}{% endblock %}	
+	
+</body>
 </html>

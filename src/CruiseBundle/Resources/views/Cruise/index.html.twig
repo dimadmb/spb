@@ -1,0 +1,363 @@
+{% extends '::base.html.twig' %}
+
+{% use '::mainContent.html.twig' %}	
+
+
+
+{% block body %}
+
+{{dump()}}
+		<aside class="right-form">
+			<div class="zag">Купить билеты онлайн</div>
+			<form method="post">
+				
+
+
+				
+				
+				
+				<div class="radio-item">
+					<input name="roundTrip" type="radio" id="roundTrip2" value="2" checked="checked">
+					<label for="radio">Туда и обратно</label>
+				</div>
+				<div class="radio-item right">
+					<input name="roundTrip" type="radio" id="roundTrip1" value="1">
+					<label for="radio2">В одну сторону</label>
+				</div>
+				<div class="clear"></div>				
+				
+				
+				<div class="item">
+					Направление<br/>
+					<select name="roundTrip2"  id="">
+						<option value="">СПб - Петергоф - СПб</option>
+					</select>
+					
+					<select name="roundTrip1" class="hidden" id="">
+						<option value="1">СПб - Петергоф</option>
+						<option value="2">Петергоф - СПб</option>
+					</select>
+				</div>
+				
+				<div class="item">
+					Дата<br/>
+					<input type="text" class="date" id="datepicker" value="{{nearestDate | date("d.m.Y")}}">
+				</div>				
+				
+				{#{ render(controller('CruiseBundle:Calendar:index')) }#}
+				{{ render(controller('CruiseBundle:Calendar:dateArray')) }}
+
+				<div id="times">
+					{{ render(controller('CruiseBundle:Cruise:cruise')) }}
+				</div>
+				
+				
+				<div class="clear"></div>
+				<div class="prices">
+				
+				</div>
+				<div class="clear"></div>
+				<div class="result">
+					Итого: <span id="itogo">0</span> руб.
+				</div>
+				
+				<div class="clear"></div>
+				
+				<div class="submit">
+					<input type="submit" value="Купить">
+				</div>				
+				
+				<div class="clear"></div>
+				
+			</form>
+		</aside>
+		
+
+		
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+<script>
+	$(document).ready(function() {
+	
+	
+		$('form').submit(function(){
+			
+			console.log($('#itogo').text());
+			
+			if($('#itogo').text() == 0 ) 
+			{
+				console.log(0);
+				return false;
+			}
+			else 
+			{
+				console.log(1);
+				return true;
+			}
+		});
+	
+		
+		function setPrices(){
+			var cruise1 = $('select[name="cruise1"]').find('option:selected');
+			var cruise2 = $('select[name="cruise2"]').find('option:selected');
+			var data1 = cruise1.attr('data-price');
+			var data2 = cruise2.attr('data-price');
+			var prices1 = $.parseJSON(data1);
+			var prices2 = $.parseJSON(data2);
+			var cruiseId1 = cruise1.attr('data-id');
+			var cruiseId2 = cruise2.attr('data-id');
+			
+			var cruiseFreePlace1 = cruise1.attr('data-freePlace')*1;
+			var cruiseFreePlace2 = cruise2.attr('data-freePlace')*1;
+			//var cruiseFreePlace = Math.min(cruiseFreePlace1,cruiseFreePlace2)
+
+			// получам возвратный ли
+			var roundTrip = $('input:radio[name=roundTrip]:checked').val();
+			
+			// только туда
+			if(roundTrip == 1)
+			{
+				// если в одну сторону, то узнаем в какую
+				var direction = $('select[name="roundTrip1"]').find('option:selected').val();
+				//console.log(direction);
+				
+				if(direction == 1) {var cruiseFreePlace = cruiseFreePlace1};
+				if(direction == 2) {var cruiseFreePlace = cruiseFreePlace2};
+				
+				var prices = new Object();
+				for(category_id in prices1[direction])
+				{
+					 if(direction == 1) prices[category_id] = prices1[1][category_id];
+					 if(direction == 2) prices[category_id] = prices2[1][category_id];
+				}	
+							
+				
+			}
+			// туда - обратно
+			else if (roundTrip == 2)
+			{
+				var prices = new Object();
+				
+				var cruiseFreePlace = Math.min(cruiseFreePlace1,cruiseFreePlace2);
+				
+				
+				for(category_id in prices1[2])
+				{
+					prices[category_id] = prices1[2][category_id];
+				}	
+
+				console.log(prices);
+				
+				for(category_id in prices2[2])
+				{
+					prices[category_id]['price'] = prices[category_id]['price']*1 + prices2[2][category_id]['price']*1;
+				}
+
+			}
+			
+
+			// теперь считаем и вставляем цены
+			
+			// очищаем div.prices
+			$('div.prices').html('');
+			
+			$.each(prices,function(index,value){
+			
+				var div = document.createElement('div');
+				$(div).addClass('item').addClass('big').attr({'data-category-id':index});
+				var div_s = document.createElement('div');
+				$(div_s).addClass('right_s');
+				var label = document.createElement('label');
+				//$(label).text(index + ' - ' + value);
+				
+				var select = document.createElement('select');
+				$(select).attr({'name':'category['+index+']'});
+				$(select).attr({'id':'category-'+index});
+				$(select).attr({'data-id':index});
+				$(select).attr({'data-price':value['price']});
+				
+				for(i=0;i<=cruiseFreePlace;i++)
+				{
+					$(select).append('<option value="'+i+'">'+i+'</option>');
+				}
+				
+				$(div_s).append(select);
+				
+				$(div).append(div_s);
+				
+				$(div).append(value['name']+ '<div class="price">' + value['price'] + ' руб.</div>')
+				var input = document.createElement('input');
+				// div.appendChild(label);
+				label.appendChild(input);
+				
+				
+				$('div.prices').append(div);
+
+			
+			})		
+
+			itog();
+			
+		};
+		setPrices();
+		
+		
+		
+		$('body').on('change','select[id^="category"]',function(){itog()});	
+
+		
+		function itog()
+		{
+			summa = 0;
+			$('.prices select').each(function(){
+				category_id = $(this).attr('data-id');
+				val = $(this).val();
+				price = $(this).attr('data-price');
+				summa = summa + val*price;
+			})
+			$('.result').html('Итого: <span id="itogo">'+ summa + '</span> руб.');
+		}
+		
+		
+		$('#times').on('change','#cruise1,#cruise2',function(){setPrices()});
+
+		
+		
+		// ajax подгрузка круизов при смене данных
+		$('#datepicker').change(function(){
+			date =  $(this).val();
+			date = date.substr(6,4) + '-' + date.substr(3,2) + '-' + date.substr(0,2);
+			$.ajax({
+			  url: "{{path('ajax_cruises')}}"+"/"+date,
+			  success: function(html){
+				$('div#times').html(html);
+				$('input:radio[name="roundTrip"]').trigger('change');
+			  }
+			});
+		});
+		
+		
+		
+		// ограничение выбора времени второго от первого
+		$('#times').on('change','#cruise1',function(){
+			if($('input:radio[name="roundTrip"]:checked').val() == 1) return false;
+			
+			//console.log('сработало первое ограничение');
+			
+			timestamp1 = $(this).find('option:selected').attr('data-timestamp');
+			$('#times #cruise2').children("option").each(function(){
+				if($(this).attr('data-timestamp')*1 < (timestamp1*1 + 3600))
+				{
+					$(this).attr('disabled',true);
+				}
+				else
+				{
+					$(this).removeAttr('disabled');
+				}
+			})
+			if ( $('#times #cruise2').children("option:selected").attr('data-timestamp')*1 < $('#times #cruise2').children("option:not([disabled]):first").attr('data-timestamp')*1 )
+			{
+				$('#times #cruise2').children("option:not([disabled]):first").attr("selected", "selected");
+			}
+
+			setPrices();
+		});
+		// ограничение выбора времени первого от второго
+		$('#times').on('change','#cruise2',function(){
+			if($('input:radio[name="roundTrip"]:checked').val() == 1) return false;
+			
+			//console.log('сработало второе ограничение');
+			
+			timestamp2 = $(this).find('option:selected').attr('data-timestamp');
+			$('#times #cruise1').children("option").each(function(){
+				if($(this).attr('data-timestamp')*1 > (timestamp2*1 - 3600))
+				{
+					$(this).attr('disabled',true);
+				}
+				else
+				{
+					$(this).removeAttr('disabled');
+				}
+			})
+			if ( $('#times #cruise1').children("option:selected").attr('data-timestamp')*1 > $('#times #cruise1').children("option:not([disabled]):last").attr('data-timestamp')*1 )
+			{
+				$('#times #cruise1').children("option:not([disabled]):first").attr("selected", "selected");
+			}
+			
+			setPrices();
+		});
+		// выбор билета в одну сторону или две
+		$('body').on('change', 'input:radio[name=roundTrip]:checked',function(){
+			
+			//console.log($(this).val());
+			
+			if($(this).val() == 1)  // в одну сторону
+			{ 
+				
+				
+				
+				// разблокируем всё время
+				$('#times #cruise2').children("option").each(function(){
+					$(this).removeAttr('disabled');
+				});
+				$('#times #cruise1').children("option").each(function(){
+					$(this).removeAttr('disabled');
+				});
+				
+				$('select[name="roundTrip2"]').addClass('hidden');
+				$('select[name="roundTrip1"]').removeClass('hidden');
+				
+				// теперь проверка в какую сторону оставить
+				// 1 получить активный option 
+				var direction = $('select[name="roundTrip1"]').find('option:selected').val();
+				//console.log(direction);
+				if(direction == 1)
+				{
+					$('#times #cruise1').removeClass('hidden');
+					$('#times #cruise2').addClass('hidden');	
+				}
+				else if(direction == 2)
+				{
+					$('#times #cruise1').addClass('hidden');
+					$('#times #cruise2').removeClass('hidden');
+				}
+			}
+			else if ($(this).val() == 2) // туда - обратно
+			{
+				$('select[name="roundTrip1"]').addClass('hidden');
+				$('select[name="roundTrip2"]').removeClass('hidden');
+				
+				
+				$('#times #cruise1').removeClass('hidden');
+				$('#times #cruise2').removeClass('hidden');
+				
+			}
+			setPrices();
+		});
+		// выбор направления
+		$('body').on('change', 'select[name="roundTrip1"]',function(){
+			var direction = $('select[name="roundTrip1"]').find('option:selected').val();
+				if(direction == 1)
+				{
+					$('#times #cruise1').removeClass('hidden');
+					$('#times #cruise2').addClass('hidden');	
+				}
+				else if(direction == 2)
+				{
+					$('#times #cruise1').addClass('hidden');
+					$('#times #cruise2').removeClass('hidden');
+				}
+				
+				setPrices();
+		});
+		
+
+	});
+</script>	
+
+{% endblock %}
+

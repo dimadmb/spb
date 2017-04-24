@@ -5,7 +5,9 @@ namespace AdminBundle\Controller;
 use CruiseBundle\Entity\PriceDefault;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Pricedefault controller.
@@ -19,6 +21,7 @@ class PriceDefaultController extends Controller
      *
      * @Route("/", name="pricedefault_index")
      * @Method("GET")
+	 * @Template()
      */
     public function indexAction()
     {
@@ -26,9 +29,9 @@ class PriceDefaultController extends Controller
 
         $priceDefaults = $em->getRepository('CruiseBundle:PriceDefault')->findAll();
 
-        return $this->render('pricedefault/index.html.twig', array(
+        return array(
             'priceDefaults' => $priceDefaults,
-        ));
+        );
     }
 
     /**
@@ -36,6 +39,7 @@ class PriceDefaultController extends Controller
      *
      * @Route("/new", name="pricedefault_new")
      * @Method({"GET", "POST"})
+	 * @Template()	 
      */
     public function newAction(Request $request)
     {
@@ -51,10 +55,10 @@ class PriceDefaultController extends Controller
             return $this->redirectToRoute('pricedefault_show', array('id' => $priceDefault->getId()));
         }
 
-        return $this->render('pricedefault/new.html.twig', array(
+        return  array(
             'priceDefault' => $priceDefault,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
@@ -62,15 +66,16 @@ class PriceDefaultController extends Controller
      *
      * @Route("/{id}", name="pricedefault_show")
      * @Method("GET")
+	 * @Template()
      */
     public function showAction(PriceDefault $priceDefault)
     {
         $deleteForm = $this->createDeleteForm($priceDefault);
 
-        return $this->render('pricedefault/show.html.twig', array(
+        return array(
             'priceDefault' => $priceDefault,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
@@ -78,6 +83,7 @@ class PriceDefaultController extends Controller
      *
      * @Route("/{id}/edit", name="pricedefault_edit")
      * @Method({"GET", "POST"})
+	 * @Template()
      */
     public function editAction(Request $request, PriceDefault $priceDefault)
     {
@@ -91,11 +97,11 @@ class PriceDefaultController extends Controller
             return $this->redirectToRoute('pricedefault_edit', array('id' => $priceDefault->getId()));
         }
 
-        return $this->render('pricedefault/edit.html.twig', array(
+        return array(
             'priceDefault' => $priceDefault,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**

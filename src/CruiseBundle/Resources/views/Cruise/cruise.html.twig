@@ -1,0 +1,38 @@
+{#{dump(cruises)}#}
+
+{#
+
+тут должно быть:
+
+направление
+
+выбор времени
+
+количество билетов в категориях, так как могут быть уникальные категории, причём у каждого круиза в отдельности!!!
+
+#}
+
+
+
+
+
+<div class="col">
+	<div class="item">
+	Отправление<br/>
+		<select name="cruise1" id="cruise1">
+		{% for cruise in cruises.cruises1 if cruise.freeCountPlace > 0 %}
+			<option data-freePlace="{{cruise.freeCountPlace}}" data-id="{{cruise.id}}" data-price="{{cruise.priceArr | json_encode()}}" data-timestamp="{{cruise.time | date('U')}}" value="{{cruise.id}}">{{cruise.time | date('H:i')}}</option>
+		{% endfor %}	
+		</select>
+	</div>
+</div>
+<div class="col right">
+	<div class="item">
+	Возвращение<br/>
+		<select name="cruise2" id="cruise2">
+		{% for cruise in cruises.cruises2  if cruise.freeCountPlace > 0  %}
+			<option data-freePlace="{{cruise.freeCountPlace}}" data-id="{{cruise.id}}" data-price="{{cruise.priceArr | json_encode()}}" data-timestamp="{{cruise.time | date('U')}}" value="{{cruise.id}}">{{cruise.time | date('H:i')}}</option>
+		{% endfor %}	
+		</select>
+	</div>
+</div>

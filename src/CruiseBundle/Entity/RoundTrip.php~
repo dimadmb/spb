@@ -39,6 +39,10 @@ class RoundTrip
 	private $price;	
 	
 
+	public function __toString()
+	{
+		return $this->name;
+	}
 
     /**
      * Get id
@@ -73,5 +77,80 @@ class RoundTrip
     {
         return $this->name;
     }
-}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->priceDefault = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->price = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
+    /**
+     * Add priceDefault
+     *
+     * @param \CruiseBundle\Entity\PriceDefault $priceDefault
+     *
+     * @return RoundTrip
+     */
+    public function addPriceDefault(\CruiseBundle\Entity\PriceDefault $priceDefault)
+    {
+        $this->priceDefault[] = $priceDefault;
+
+        return $this;
+    }
+
+    /**
+     * Remove priceDefault
+     *
+     * @param \CruiseBundle\Entity\PriceDefault $priceDefault
+     */
+    public function removePriceDefault(\CruiseBundle\Entity\PriceDefault $priceDefault)
+    {
+        $this->priceDefault->removeElement($priceDefault);
+    }
+
+    /**
+     * Get priceDefault
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPriceDefault()
+    {
+        return $this->priceDefault;
+    }
+
+    /**
+     * Add price
+     *
+     * @param \CruiseBundle\Entity\Price $price
+     *
+     * @return RoundTrip
+     */
+    public function addPrice(\CruiseBundle\Entity\Price $price)
+    {
+        $this->price[] = $price;
+
+        return $this;
+    }
+
+    /**
+     * Remove price
+     *
+     * @param \CruiseBundle\Entity\Price $price
+     */
+    public function removePrice(\CruiseBundle\Entity\Price $price)
+    {
+        $this->price->removeElement($price);
+    }
+
+    /**
+     * Get price
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+}

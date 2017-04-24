@@ -1,0 +1,45 @@
+
+
+
+<br>
+<br>
+<br>
+
+{{dump()}}
+
+{% for yearMonth, month in months %}
+
+<table class="calendar" >
+
+	<tr>
+		<th colspan="7" style="text-align:center;"> {{month.timestamp | localizeddate('full', 'none', 'ru',null, 'LLLL')}} </th>
+	</tr>
+	<tr>
+		<th class="workday">Пн</th>
+		<th class="workday">Вт</th>
+		<th class="workday">Ср</th>
+		<th class="workday">Чт</th>
+		<th class="workday">Пт</th>
+		<th class="weekday">Сб</th>
+		<th class="weekday">Вс</th>
+	</tr>
+	
+{% for i in (2-month.firstDayOfWeek)..(month.dayCount+month.freeCellEnd) %}
+{% if (i-2+month.firstDayOfWeek)%7 == 0 %}
+<tr>
+{% endif %}
+	<td>
+{% if i > 0 and i <= month.dayCount %}
+		<p {% if i in month.days %} class="active" data-date="{{yearMonth}}-{% if i < 10 %}0{% endif %}{{ i }}" {% endif %} style="{% if i in month.days %}color:#fff; cursor:pointer; background:#dc0046; {% endif %} border-radius:5px; width:30px; height:30px; padding:5px; line-height:20px; text-align:center; ">{{i}}</p>
+{% endif %}
+	</td>
+{% if (i-2+month.firstDayOfWeek)%7 == 6 %}
+</tr>
+{% endif %}
+{% endfor %}
+	
+</table>
+
+
+{% endfor %}
+

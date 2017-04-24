@@ -18,6 +18,9 @@
 	<div class="container">
 	
 		<div class="row">
+
+		
+		
 			<div class="navbar navbar-inverse" role="navigation">
 				<div class="container-fluid">
 				  <div class="navbar-header">
@@ -33,15 +36,46 @@
 					  <li><a href="{{path('admin_cruise_index')}}">Круизы</a></li>
 					  <li><a href="{{path('category_index')}}">Категории пассажиров</a></li>
 					  <li><a href="{{path('pricedefault_index')}}">Цены по умолчанию</a></li>
+					  <li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Продажи <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="{{path('admin_sale_cruise_index')}}">Круизы</a></li>
+							<li><a href="{{path('admin_sale_order_index')}}">Заказы</a></li>
+						</ul>						
+					  </li>
 
 					</ul>
+					
+				
+					
 				  </div><!--/.nav-collapse -->
 				</div><!--/.container-fluid -->
-			  </div>	
+			  </div>
+
+			  
 		</div>	
 	
 	
 		<div class="row">
+		
+					<div class="">
+						{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+							
+							
+							{#{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }#}
+							Вы вошли как <a href="{{path('fos_user_profile_show')}}">{{app.user.username}}</a>
+							|
+							<a href="{{ path('fos_user_security_logout') }}">
+								{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+							</a>
+						{% else %}
+						   <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+						{% endif %}
+						
+					</div>			
+		
 			{% block body %}{% endblock %}
 		</div>
 	</div>

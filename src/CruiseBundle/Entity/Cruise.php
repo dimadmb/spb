@@ -53,16 +53,29 @@ class Cruise
 	
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Direction")
+	 * @ORM\ManyToOne(targetEntity="Direction", fetch="EAGER")
 	 */
 	private $direction;
-	
+
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="active", type="boolean",options={"default" : true})
+     */
+    private $active  = true;	
 	
 	/**
 	 * @ORM\OneToMany(targetEntity="Price", mappedBy="cruise", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
+	 * @ORM\OrderBy({"price" = "DESC"})
 	 */
-	private $prices; 
+	private $prices;
+	
 
+	/**
+	 * @ORM\OneToMany(targetEntity="OrderCruise", mappedBy="cruise")
+	 */
+	private $orderCruise;
 
 	
 	
@@ -245,5 +258,63 @@ class Cruise
     public function getPrices()
     {
         return $this->prices;
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     *
+     * @return Cruise
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Add orderCruise
+     *
+     * @param \CruiseBundle\Entity\OrderCruise $orderCruise
+     *
+     * @return Cruise
+     */
+    public function addOrderCruise(\CruiseBundle\Entity\OrderCruise $orderCruise)
+    {
+        $this->orderCruise[] = $orderCruise;
+
+        return $this;
+    }
+
+    /**
+     * Remove orderCruise
+     *
+     * @param \CruiseBundle\Entity\OrderCruise $orderCruise
+     */
+    public function removeOrderCruise(\CruiseBundle\Entity\OrderCruise $orderCruise)
+    {
+        $this->orderCruise->removeElement($orderCruise);
+    }
+
+    /**
+     * Get orderCruise
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrderCruise()
+    {
+        return $this->orderCruise;
     }
 }

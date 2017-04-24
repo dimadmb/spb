@@ -29,7 +29,8 @@ class Price
     private $price;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Cruise", inversedBy="prices")
+	 * @ORM\ManyToOne(targetEntity="Cruise",  inversedBy="prices")
+     *   @ORM\JoinColumn( onDelete="CASCADE" )
 	 */
 	private $cruise;
 

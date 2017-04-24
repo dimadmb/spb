@@ -29,7 +29,8 @@ class Price
     private $price;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Cruise", inversedBy="prices")
+	 * @ORM\ManyToOne(targetEntity="Cruise",  inversedBy="prices")
+     *   @ORM\JoinColumn( onDelete="CASCADE" )
 	 */
 	private $cruise;
 
@@ -126,5 +127,29 @@ class Price
     public function getCruise()
     {
         return $this->cruise;
+    }
+
+    /**
+     * Set roundTrip
+     *
+     * @param \CruiseBundle\Entity\RoundTrip $roundTrip
+     *
+     * @return Price
+     */
+    public function setRoundTrip(\CruiseBundle\Entity\RoundTrip $roundTrip = null)
+    {
+        $this->roundTrip = $roundTrip;
+
+        return $this;
+    }
+
+    /**
+     * Get roundTrip
+     *
+     * @return \CruiseBundle\Entity\RoundTrip
+     */
+    public function getRoundTrip()
+    {
+        return $this->roundTrip;
     }
 }

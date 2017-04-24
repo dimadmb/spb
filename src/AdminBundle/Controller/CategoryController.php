@@ -5,7 +5,9 @@ namespace AdminBundle\Controller;
 use CruiseBundle\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Category controller.
@@ -19,6 +21,7 @@ class CategoryController extends Controller
      *
      * @Route("/", name="category_index")
      * @Method("GET")
+	 * @Template()		 
      */
     public function indexAction()
     {
@@ -26,9 +29,9 @@ class CategoryController extends Controller
 
         $categories = $em->getRepository('CruiseBundle:Category')->findAll();
 
-        return $this->render('category/index.html.twig', array(
+        return  array(
             'categories' => $categories,
-        ));
+        );
     }
 
     /**
@@ -36,6 +39,7 @@ class CategoryController extends Controller
      *
      * @Route("/new", name="category_new")
      * @Method({"GET", "POST"})
+	 * @Template()			 
      */
     public function newAction(Request $request)
     {
@@ -51,10 +55,10 @@ class CategoryController extends Controller
             return $this->redirectToRoute('category_show', array('id' => $category->getId()));
         }
 
-        return $this->render('category/new.html.twig', array(
+        return  array(
             'category' => $category,
             'form' => $form->createView(),
-        ));
+        );
     }
 
     /**
@@ -62,15 +66,16 @@ class CategoryController extends Controller
      *
      * @Route("/{id}", name="category_show")
      * @Method("GET")
+	 * @Template()			 
      */
     public function showAction(Category $category)
     {
         $deleteForm = $this->createDeleteForm($category);
 
-        return $this->render('category/show.html.twig', array(
+        return  array(
             'category' => $category,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
@@ -78,6 +83,7 @@ class CategoryController extends Controller
      *
      * @Route("/{id}/edit", name="category_edit")
      * @Method({"GET", "POST"})
+	 * @Template()			 
      */
     public function editAction(Request $request, Category $category)
     {
@@ -91,11 +97,11 @@ class CategoryController extends Controller
             return $this->redirectToRoute('category_index');
         }
 
-        return $this->render('category/edit.html.twig', array(
+        return array(
             'category' => $category,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**

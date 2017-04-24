@@ -1,0 +1,135 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+{{dump()}}
+
+
+<div class="payment-page">
+			<h1>Оформление заказа</h1>
+			<div class="list">
+				<div class="col">
+					<div class="order-info">
+						<div class="zag">СПб – Петергоф – СПб</div>
+						
+						{% for cruise in order.cruises %}
+						<div class="item">
+							Место отправления
+							<span>{{cruise.direction.placeStart}}</span>
+						</div>
+						<div class="item">
+							Дата и время:
+							<span>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} {{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}	</span>
+						</div>
+						{% endfor %}
+
+						
+						
+						<div class="peoples">
+						
+						<table class="table-order-info">
+
+						
+						
+							{% set summ = 0 %}
+							{% for category in order.category %}
+							
+
+							
+							{% set item_summ = 0 %}
+							
+							{% set item_price = 0 %}
+							
+							{% for orderCruise in category.orderCruises %}
+							
+							{% set item_summ = item_summ + (orderCruise.price * orderCruise.count) %}
+							{% set item_price = item_price + (orderCruise.price ) %}
+							
+							{% endfor %}
+							
+							{% set summ = summ + item_summ %}
+							
+				
+							
+							
+							
+							<tr>
+								<td>{{category.category.name}}</td>
+								<td><span>{{category.count}} чел.</span></td>
+								<td><span>{{item_price}}  руб.</span></td>
+								<td><span>{{item_summ}}  руб.</span></td>
+							</tr>
+							
+							{% endfor %}
+							<div class="clear"></div>
+						</table>
+						</div>
+						
+						
+						
+						<div class="result">Итого: {{summ}} руб.</div>
+						<a href="#" class="bottom-link">&lt; Изменить параметры заказа</a>
+					</div>
+				</div>
+				<div class="col">
+					<div class="order-form">
+						<div class="zag">Укажите ваши данные</div>
+						<form action="{{path('to_pay')}}" method="post">
+							Фамилия и имя
+							<input name="name" required="required" type="text">
+							E-mail
+							<input name="email" required="required" type="email">
+							Телефон
+							<input name="phone" required="required" type="phone">
+
+							<div class="submit">
+								<input type="submit" value="Купить">
+							</div>							
+							
+						</form>
+					</div>
+				</div>
+				
+				<!--
+				<div class="col">
+					<div class="order-form">
+						<div class="zag">Выберете способ оплаты</div>
+						<form>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio" name="r1">
+								<label for="radio">Банковской картой</label>
+							</div>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio2" name="r1">
+								<label for="radio2">Яндекс Деньги</label>
+							</div>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio3" name="r1">
+								<label for="radio3">Web Money</label>
+							</div>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio4" name="r1">
+								<label for="radio4">Union Pay</label>
+							</div>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio5" name="r1">
+								<label for="radio5">Наличные</label>
+							</div>
+							<div class="radio-item">
+								<input type="radio" class="radio" id="radio6" name="r1">
+								<label for="radio6">Выставить счёт</label>
+							</div>
+							<div class="submit">
+								<input type="submit" value="Купить">
+							</div>
+						</form>
+					</div>
+				</div>
+				
+				-->
+				<div class="clear"></div>
+			</div>
+		</div>
+
+
+{% endblock %}

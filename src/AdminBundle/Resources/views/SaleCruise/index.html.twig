@@ -1,0 +1,44 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+	
+	
+	
+	<table class="table">
+		<tr>
+			<th>ID</th>
+			<th>Направление</th>
+			<th>Дата отправления</th>
+			<th>Время отправления</th>
+			<th>Мест для продажи</th>
+			<!--<th style="min-width: 340px;">Цены</th>-->
+			<th>Продано</th>
+			<th></th>
+		</tr>
+
+	
+
+	{% for cruise in cruises %}
+		
+		<tr>
+			<td>{{cruise.id}}</td>
+			<td>{{cruise.direction.name}}</td>
+			<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }}</td>
+			<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
+			<td>{{cruise.quantity}}</td>
+			<!--<td>
+			{% for price in cruise.prices %}
+				{{price.category.name}} {{price.roundTrip.name}}  <span style="float:right; font-weight:700; ">{{price.price | number_format(0, '.', ' ') }} руб.</span><br>
+			{% endfor %}
+			</td>-->
+			<td><span {% if cruise.saleCount>0 %}style="font-weight:900; color:red;"{% endif %}>{{cruise.saleCount}}</span></td>
+			<td><a href="{{path('admin_sale_cruise_item',{'id':cruise.id})}}" class="btn btn-success">Посмотреть</a></td>
+		</tr>		
+	
+	{% endfor %}
+	</table>	
+	
+	
+	
+{% endblock %}	

@@ -27,6 +27,15 @@ class Direction
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+
+	
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="place_start", type="string", length=255)
+     */
+    private $placeStart;
 	
 
 
@@ -70,4 +79,28 @@ class Direction
     }
 
 
+
+    /**
+     * Set placeStart
+     *
+     * @param string $placeStart
+     *
+     * @return Direction
+     */
+    public function setPlaceStart($placeStart)
+    {
+        $this->placeStart = $placeStart;
+
+        return $this;
+    }
+
+    /**
+     * Get placeStart
+     *
+     * @return string
+     */
+    public function getPlaceStart()
+    {
+        return $this->placeStart;
+    }
 }

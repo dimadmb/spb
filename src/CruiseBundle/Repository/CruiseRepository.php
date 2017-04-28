@@ -13,7 +13,7 @@ class CruiseRepository extends \Doctrine\ORM\EntityRepository
 	//  получаем даты с активными круизами
 	public function getDays() {
 		$str = "SELECT c
-			FROM CruiseBundle:Cruise c, CruiseBundle:OrderCruise oc
+			FROM CruiseBundle:Cruise c
 			WHERE CONCAT(c.date , ' ' , c.time)  >= CURRENT_TIMESTAMP()			
 			AND c.active = 1
 			GROUP BY c.date

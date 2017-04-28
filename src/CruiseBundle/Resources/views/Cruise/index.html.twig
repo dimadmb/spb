@@ -6,7 +6,7 @@
 
 {% block body %}
 
-{{dump()}}
+{#{dump()}#}
 		<aside class="right-form">
 			<div class="zag">Купить билеты онлайн</div>
 			<form method="post">
@@ -111,8 +111,8 @@
 			var cruiseId1 = cruise1.attr('data-id');
 			var cruiseId2 = cruise2.attr('data-id');
 			
-			var cruiseFreePlace1 = cruise1.attr('data-freePlace')*1;
-			var cruiseFreePlace2 = cruise2.attr('data-freePlace')*1;
+			var cruiseFreePlace1 = Math.min(10 , cruise1.attr('data-freePlace')*1);
+			var cruiseFreePlace2 = Math.min(10 , cruise2.attr('data-freePlace')*1);
 			//var cruiseFreePlace = Math.min(cruiseFreePlace1,cruiseFreePlace2)
 
 			// получам возвратный ли
@@ -150,7 +150,7 @@
 					prices[category_id] = prices1[2][category_id];
 				}	
 
-				console.log(prices);
+				//console.log(prices);
 				
 				for(category_id in prices2[2])
 				{

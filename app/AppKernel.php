@@ -20,7 +20,11 @@ class AppKernel extends Kernel
 			
 			new Liuggio\ExcelBundle\LiuggioExcelBundle(),		
 
-			new FOS\UserBundle\FOSUserBundle(),			
+			new FOS\UserBundle\FOSUserBundle(),		
+
+			new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),	
+
+			new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),			
 			
         ];
 

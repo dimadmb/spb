@@ -2,7 +2,7 @@
 
 {% block body %}
 
-{{dump()}}
+{#{dump()}#}
 
 
 <div class="payment-page">
@@ -10,7 +10,25 @@
 			<div class="list">
 				<div class="col">
 					<div class="order-info">
-						<div class="zag">СПб – Петергоф – СПб</div>
+						<div class="zag">
+						{% if order.cruises|length == 2 %}
+						СПб – Петергоф – СПб
+						{% elseif order.cruises|length == 1 %}
+							{% for key,cruise in order.cruises %}
+								
+								
+								{{cruise.direction.name}}
+								
+								
+								{#% if key == 1 %}
+								СПб - Петергоф
+								{% elseif key == 2 %}
+								Петергоф - СПб
+								{% endif %#}
+							{% endfor %}
+						
+						{% endif %}
+						</div>
 						
 						{% for cruise in order.cruises %}
 						<div class="item">
@@ -68,7 +86,7 @@
 						
 						
 						<div class="result">Итого: {{summ}} руб.</div>
-						<a href="#" class="bottom-link">&lt; Изменить параметры заказа</a>
+						<a href="{{path('homepage')}}" class="bottom-link">&lt; Изменить параметры заказа</a>
 					</div>
 				</div>
 				<div class="col">

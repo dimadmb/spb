@@ -59,6 +59,8 @@ class CalendarController extends Controller
 		
 		$arr = [];
 		
+		//dump($cruiseDays);
+		
 		foreach($cruiseDays as $cruiseDay)
 		{
 			$arr[] = $cruiseDay->getDate()->format('"Y-m-d"');

@@ -16,6 +16,11 @@ security:
             id: fos_user.user_provider.username_email
 
     firewalls:
+        gaz:
+            pattern: ^/gazprom
+            http_basic: ~
+            #stateless:  true
+
         main:
             pattern: ^/
             form_login:
@@ -26,6 +31,8 @@ security:
 
             logout:       true
             anonymous:    true
+
+
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

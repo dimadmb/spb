@@ -11,6 +11,20 @@ namespace CruiseBundle\Repository;
 class OrderCruiseRepository extends \Doctrine\ORM\EntityRepository
 {
 
+	
+	public function getTotalCost($order_id)
+	{
+		$str = "
+		SELECT SUM(oc.price * oc.count ) summ
+		FROM CruiseBundle:OrderCruise oc 
+		WHERE oc.ordering = $order_id
+		";
+   		$q = $this->_em->createQuery($str);
+   		return $q->getOneOrNullResult()['summ'] * 1;		
+		
+	}
+	
+	
 	public function getFreeCountPlace($cruise_id) {
 		$str = "SELECT (c.quantity - COALESCE(SUM(oc.count) ,0)) free_count
 			FROM  CruiseBundle:Cruise c

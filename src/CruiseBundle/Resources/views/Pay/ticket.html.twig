@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+	
+<style>
+html {
+min-height:1300px;
+}
+
+
+body {
+	/*background: url({{absolute_url(asset('img/fon.jpg')) }});*/
+	
+	min-height:100%;
+}
+
+table.table-ticket {
+	width:100%;
+	border:1px solid #ccc;
+	margin:0 auto;
+}
+table.table-ticket > tbody > tr > td {
+	padding:3px;
+}
+
+table.table-ticket > tbody > tr > td td {
+	padding:3px 5px 3px 0;
+}
+
+
+
+
+table.table-ticket > tbody > tr:nth-child(2n) {
+    background: #f0f0f0; /* Цвет фона */
+   } 
+
+.result {
+	font-weight:900;
+}
+
+
+.t_header table td {
+	padding:2px 5px;
+}
+.t_header {
+	font-size:12px;
+}
+
+
+
+</style>	
+	
+</head>
+
+
+
+
+<body>
+
+<h1 style="text-align:center;">
+		Билет № {{order.id}}
+		{% if order.cruises|length == 2 %}
+		СПб – Петергоф – СПб
+		{% elseif order.cruises|length == 1 %}
+			{% for key,cruise in order.cruises %}
+				
+				
+				{{cruise.direction.name}}
+				
+				
+				{#% if key == 1 %}
+				СПб - Петергоф
+				{% elseif key == 2 %}
+				Петергоф - СПб
+				{% endif %#}
+			{% endfor %}
+		
+		{% endif %}</h1>
+
+		
+	<table class="t_header" style="margin-bottom:10px;">
+	
+	<tr><td>	<img src="{{absolute_url(asset('img/order_logo.jpg')) }}" style="width:150px" /></td>
+		<td style="width: 700px; ">
+			<table style="width:100%;">
+				<tr><td>ООО «ВодоходЪ»</td></tr>
+				<tr><td>125284, г.Москва, Скаковая аллея, д. 11</td></tr>
+				<tr><td>ИНН 7707511820 КПП 771401001</td></tr>
+				<tr><td>Реестровый номер туроператора серия РТО №002057</td></tr>
+				<tr><td>р/с № 407 028 102 383 601 061 83, в Московком банке Сбербанка России ОАО</td></tr>
+				<tr><td>Кор/счет 301 018 104 000 000 002 25, БИК 044525225, ОКПО 72049650, ОГРН 1047796094697</td></tr>
+			</table>
+		</td></tr>
+	</table>		
+
+
+	<br>
+	<br>
+	<br>
+	
+	
+<table class="table-ticket">
+<tbody>
+
+	
+	<tr>
+		<td>Заказчик</td>
+		<td>{{order.name}}</td>
+	</tr>	
+	
+	<tr>
+		<td></td>
+		<td>{{order.phone}}</td>
+	</tr>	
+	
+	<tr>
+		<td></td>
+		<td>{{order.email}}</td>
+	</tr>
+
+{% for cruise in order.cruises %}
+
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	
+	<tr>
+		<td>Место отправления</td>
+		<td>{{cruise.direction.placeStart}}</td>
+	</tr>
+	
+	<tr>
+		<td>Дата и время: </td>
+		<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} {{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
+	</tr>	
+
+
+{% endfor %}
+
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	
+	
+<tr>
+	<td>Пассажиры</td>
+	<td>
+<table>
+
+{% set summ = 0 %}
+{% for category in order.category %}
+
+	{% set item_summ = 0 %}
+	{% set item_price = 0 %}
+	{% for orderCruise in category.orderCruises %}
+
+		{% set item_summ = item_summ + (orderCruise.price * orderCruise.count) %}
+		{% set item_price = item_price + (orderCruise.price ) %}
+
+	{% endfor %}
+
+	{% set summ = summ + item_summ %}
+
+	<tr>
+		<td>{{category.category.name}}</td>
+		<td><span>{{category.count}} чел.</span></td>
+		<td><span> Стоимость {{item_price}}  руб.</span></td>
+		<td><span> Сумма {{item_summ}}  руб.</span></td>
+	</tr>
+
+{% endfor %}
+</table>
+	</td>
+</tr>	
+	
+	<tr>
+		<td></td>
+		<td><div class="result">Итого: {{summ}} руб.</div></td>
+	</tr>
+	
+
+	
+	
+	
+</tbody>	
+</table>
+<br>
+<br>
+
+
+
+
+
+	
+</body>
+</html>

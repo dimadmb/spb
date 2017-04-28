@@ -117,8 +117,11 @@ class CruiseController extends Controller
 		
 		
 		
+		$firstCruise = $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->getNearestDate();
+		$date = (null == $firstCruise) ?
+		new \DateTime() :  
+		$firstCruise->getDate() ;	
 		
-		$date = $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->getNearestDate()->getDate() ;	
 		return ['error'=>$error, 'nearestDate' => $date, 'request'=>$request,'dump'=>$dump];
 	}
 	
@@ -147,7 +150,16 @@ class CruiseController extends Controller
      */
     public function cruiseAction($date = null)
 	{
-		$date = (null == $date) ? $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->getNearestDate()->getDate() : new \DateTime($date);  
+		$firstCruise  = $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->getNearestDate();
+		
+		if(null != $firstCruise)
+		{
+			$date = (null == $date) ? $firstCruise->getDate() : new \DateTime($date);  
+		}
+		else
+		{
+			$date = new \DateTime();
+		}
 		
 		$cruises1 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findBy(['date'=>$date, 'direction'=>1],['time'=>'ASC']);
 		$this->eachCruises($cruises1);

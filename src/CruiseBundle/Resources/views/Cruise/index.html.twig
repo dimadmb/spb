@@ -128,6 +128,8 @@
 				//console.log("checked в одну");
 				$('input#roundTrip2')./*attr('disabled', 'disabled').*/removeProp('checked');
 				$('input#roundTrip1').prop('checked', 'checked');
+					$('select[name="roundTrip2"]').addClass('hidden');
+					$('select[name="roundTrip1"]').removeClass('hidden');				
 			}
 			if( !!cruise2 && cruise2.length == 1)
 			{
@@ -143,6 +145,9 @@
 				//console.log("checked в одну");
 				$('input#roundTrip2').attr('disabled', 'disabled').removeProp('checked');
 				$('input#roundTrip1').prop('checked', true);
+				
+					$('select[name="roundTrip2"]').addClass('hidden');
+					$('select[name="roundTrip1"]').removeClass('hidden');				
 			}			
 			
 //			var prices1 = $.parseJSON(data1);

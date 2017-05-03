@@ -144,7 +144,11 @@
 					|
 					<a href="{{ path('fos_user_security_logout') }}">
 						{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-					</a>
+					</a>&nbsp;  
+					{% if is_granted('ROLE_SUPER_ADMIN') %}
+						 <a style="color:#fff;"  href="{{path('admin_sale_order_index')}}">Админка</a>
+					{% endif %}	
+					
 				{% else %}
 				   <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
 				{% endif %}

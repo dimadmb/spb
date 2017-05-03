@@ -1,16 +1,28 @@
 {% extends '::baseadmin.html.twig' %}
 
+{% block javascripts %}
+<script>
+	$(document).ready(function(){
+		$('.hide-deleted').click(function(){
+			$('.deleted').slideToggle('fast');
+		});
+	});
+</script>
+
+{% endblock %}
+
+
 {% block body %}
 
-<br>	
-<br>	
-<br>	
-<br>	
-<br>	
-<br>	
 <br>
 
-{{dump()}}	
+<a href="#" class="btn btn-danger hide-deleted">Показать/скрыть удалённые</a>	
+
+<style>
+	.deleted {
+		background:#fbd2d2;
+	}
+</style>
 
 
 <table class="table">
@@ -23,7 +35,7 @@
 			<th></th>
 		</tr>
 	{% for order in orders %}
-		<tr>
+		<tr {% if order.del == 1 %} class="deleted" {% endif %}>
 			<td>
 			<b>{{order.id}}</b>
 			{% for  cruise in order.cruises %}

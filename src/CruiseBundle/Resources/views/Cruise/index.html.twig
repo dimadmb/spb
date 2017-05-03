@@ -104,15 +104,50 @@
 		function setPrices(){
 			var cruise1 = $('select[name="cruise1"]').find('option:selected');
 			var cruise2 = $('select[name="cruise2"]').find('option:selected');
-			var data1 = cruise1.attr('data-price');
-			var data2 = cruise2.attr('data-price');
-			var prices1 = $.parseJSON(data1);
-			var prices2 = $.parseJSON(data2);
-			var cruiseId1 = cruise1.attr('data-id');
-			var cruiseId2 = cruise2.attr('data-id');
 			
-			var cruiseFreePlace1 = Math.min(10 , cruise1.attr('data-freePlace')*1);
-			var cruiseFreePlace2 = Math.min(10 , cruise2.attr('data-freePlace')*1);
+			
+			
+			console.log(cruise1);
+			console.log(cruise2);
+			
+			$('input#roundTrip2').removeAttr('disabled');
+			
+			if(cruise1.length == 1)
+			{
+				var data1 = cruise1.attr('data-price');
+				var prices1 = $.parseJSON(data1);
+				var cruiseId1 = cruise1.attr('data-id');
+				var cruiseFreePlace1 = Math.min(10 , cruise1.attr('data-freePlace')*1);
+			}
+			else
+			{
+				$('select[name="roundTrip1"]').val(2);
+				$('input#roundTrip1').attr('checked', 'checked');
+				$('input#roundTrip2').attr('disabled', 'disabled').removeAttr('checked');
+				
+			}
+			if(cruise2.length == 1)
+			{
+				var data2 = cruise2.attr('data-price');
+				var prices2 = $.parseJSON(data2);
+				var cruiseId2 = cruise2.attr('data-id');
+				var cruiseFreePlace2 = Math.min(10 , cruise2.attr('data-freePlace')*1);
+			}
+			else
+			{
+				$('select[name="roundTrip1"]').val(1);
+				$('input#roundTrip1').attr('checked', 'checked');
+				$('input#roundTrip2').attr('disabled', 'disabled').removeAttr('checked');
+				
+			}			
+			
+//			var prices1 = $.parseJSON(data1);
+//			var prices2 = $.parseJSON(data2);
+//			var cruiseId1 = cruise1.attr('data-id');
+//			var cruiseId2 = cruise2.attr('data-id');
+//			
+//			var cruiseFreePlace1 = Math.min(10 , cruise1.attr('data-freePlace')*1);
+//			var cruiseFreePlace2 = Math.min(10 , cruise2.attr('data-freePlace')*1);
 			//var cruiseFreePlace = Math.min(cruiseFreePlace1,cruiseFreePlace2)
 
 			// получам возвратный ли
@@ -129,11 +164,24 @@
 				if(direction == 2) {var cruiseFreePlace = cruiseFreePlace2};
 				
 				var prices = new Object();
-				for(category_id in prices1[direction])
+				
+				if(direction == 1)
 				{
-					 if(direction == 1) prices[category_id] = prices1[1][category_id];
-					 if(direction == 2) prices[category_id] = prices2[1][category_id];
-				}	
+					for(category_id in prices1[direction])
+					{
+						 prices[category_id] = prices1[1][category_id];
+					}					
+				}				
+				if(direction == 2)
+				{
+					for(category_id in prices2[direction])
+					{
+						 prices[category_id] = prices2[1][category_id];
+					}					
+				}
+				
+				
+
 							
 				
 			}
@@ -293,7 +341,9 @@
 		// выбор билета в одну сторону или две
 		$('body').on('change', 'input:radio[name=roundTrip]:checked',function(){
 			
-			//console.log($(this).val());
+			console.log("'change', 'input:radio[name=roundTrip]:checked'");
+			
+			
 			
 			if($(this).val() == 1)  // в одну сторону
 			{ 

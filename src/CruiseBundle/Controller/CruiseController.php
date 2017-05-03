@@ -143,6 +143,7 @@ class CruiseController extends Controller
 		}
 	}
 	
+
 	
     /**
      * @Route("/ajax/cruises/{date}", name="ajax_cruises")
@@ -161,11 +162,19 @@ class CruiseController extends Controller
 			$date = new \DateTime();
 		}
 		
-		$cruises1 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findBy(['date'=>$date, 'direction'=>1],['time'=>'ASC']);
+# 		$cruises1 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findBy(['date'=>$date, 'direction'=>1],['time'=>'ASC']);
+# 		$this->eachCruises($cruises1);
+# 		
+# 		$cruises2 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findBy(['date'=>$date, 'direction'=>2],['time'=>'ASC']);
+# 		$this->eachCruises($cruises2);
+		
+		$cruises1 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findByDateTime($date, 1);
 		$this->eachCruises($cruises1);
 		
-		$cruises2 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findBy(['date'=>$date, 'direction'=>2],['time'=>'ASC']);
-		$this->eachCruises($cruises2);
+		$cruises2 =  $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findByDateTime($date, 2);
+		$this->eachCruises($cruises2);				
+	
+		
 		
 		return ['cruises'=>['cruises1'=>$cruises1,'cruises2'=>$cruises2]];
 	}

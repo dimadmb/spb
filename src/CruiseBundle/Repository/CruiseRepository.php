@@ -10,6 +10,27 @@ namespace CruiseBundle\Repository;
  */
 class CruiseRepository extends \Doctrine\ORM\EntityRepository
 {
+
+	public function findByDateTime($date,$direction) 
+	{
+		$dateTime = date("Y-m-d H:i:s",strtotime(" +1 hour"));
+		
+		$str = "SELECT c
+			FROM CruiseBundle:Cruise c
+			WHERE CONCAT(c.date , ' ' , c.time)  >= :dateTime		
+			AND c.active = 1
+			AND c.date = :date
+			AND c.direction = :direction
+			ORDER BY  c.time ASC
+			";
+   		$q = $this->_em->createQuery($str)
+		->setParameter('date', $date)
+		->setParameter('direction', $direction)
+		->setParameter('dateTime', $dateTime)
+		;
+   		return $q->getResult();		
+	}
+
 	//  получаем даты с активными круизами
 	public function getDays() {
 		$str = "SELECT c

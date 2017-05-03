@@ -39,7 +39,7 @@ class CruiseType extends AbstractType
 			->add('comment',null,['label'=>'Комментарий к рейсу'])
 			->add('quantity',null, ['label'=> 'Количество мест для продажи'] )
 			->add('direction',null, ['label' => 'Направление','required'  => true])  
-			->add('active',CheckboxType::class,['label'=>'Круиз активен'])
+			->add('active',CheckboxType::class,['label'=>'Круиз активен','required'  => false])
 		;
 		
 		/*

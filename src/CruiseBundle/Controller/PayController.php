@@ -8,9 +8,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PayController extends Controller
 {
+    /**
+     * @Route("/success", name="success")
+	 * @Template()		 
+     */
+    public function successAction(Request $request)
+	{
+		$session = $request->getSession();
+		$order_id = $session->get('order');
+		
+		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($order_id);
+		
+		return ['order'=>$order, 'order_id'=>$order_id];
+	}
+	
+
+
+
+
     /**
      * @Route("/pay", name="to_pay")
      * @Method({"POST"})
@@ -41,16 +60,19 @@ class PayController extends Controller
 		/// проверить что всё хорошо, иначе отправить назад
 		
 		//  редиректим на оплату в газпромбанк 
-		/*
-		$url_redirect = "https://www.pps.gazprombank.ru:443/payment/start.wsm?lang=RU".
-			"&merch_id=5DA408E6A74D8365E20AB20DB6789729".
-			"&back_url_s=http://volga-vodohod.ru/river-walks/order/success.htm".
-			"&back_url_f=http://volga-vodohod.ru/river-walks/order/fail.htm".
-			"&o.order_id=$order_id".
-			"&o.amount=".$out_summ*100 ;		
-		*/
 		
-		return [$request,$sum];
+		$url_redirect = "https://www.pps.gazprombank.ru:443/payment/start.wsm?lang=RU".
+			"&merch_id=819879E11103E1BD879D651446DE601B".
+			"&back_url_s=https://vodohod.spb.ru/smallfleet/order/success".
+			"&back_url_f=https://vodohod.spb.ru/smallfleet/order/fail".
+			"&o.order_id=$order_id"/*.
+			/*"&o.amount=".$sum*100*/ ;		
+		
+		 return new RedirectResponse($url_redirect);
+		
+		//$this->redirect($url_redirect);
+		
+		//return [$request,$sum,$url_redirect];
 	}
 	
 	
@@ -71,6 +93,8 @@ class PayController extends Controller
 			$order_id = $id;
 		}
 		
+		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($order_id);
+		$email = $order->getEmail();
 	
 		
 		$body = $this->render('CruiseBundle:Pay:ticket.html.twig',['order'=>$this->extOrder($order_id)])->getContent();
@@ -94,7 +118,8 @@ class PayController extends Controller
 		$message = \Swift_Message::newInstance()
 			->setSubject('Электронный билет на речную прогулку №'.$order_id)
 			->setFrom(array('nobody@vodohod.com'=>'Интернет-магазин «ВодоходЪ СПб»'))
-			->setTo(array('dkochetkov@vodohod.ru'))
+			->setTo(array($email))
+			->setCc(array('dkochetkov@vodohod.ru'))
 
 			->setBody($body, 'text/html')
 			

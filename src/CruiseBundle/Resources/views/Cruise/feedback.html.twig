@@ -1,0 +1,39 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+{#{dump()}#}
+
+
+{% for flashMessage in app.session.flashbag.get('success') %}
+
+    <p style="color:green;">{{ flashMessage }}</p>
+
+{% endfor %}
+
+<br>
+{{ form_start(form) }}
+<br>
+<label for="">{{form_label(form.subject)}}</label>
+<br>
+{{ form_widget(form.subject,{'attr':{'style':'width:300px;'}}) }}
+<br>
+<label for="">{{form_label(form.name)}}</label>
+<br>
+{{ form_widget(form.name,{'attr':{'style':'width:300px;'}}) }}
+<br>
+<label for="">{{form_label(form.email)}}</label>
+<br>
+{{ form_widget(form.email,{'attr':{'style':'width:300px;'}}) }}
+<br>
+<label for="">{{form_label(form.body)}}</label>
+<br>
+{{ form_widget(form.body,{'attr':{'style':'width:300px;'}}) }}
+<br>
+<br>
+{{ form_widget(form.submit,{'attr':{'style':'cursor:pointer;'}}) }}
+<br>
+<br>
+{{ form_end(form) }}
+<br>
+{% endblock %}

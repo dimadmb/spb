@@ -33,28 +33,37 @@ class CruiseRepository extends \Doctrine\ORM\EntityRepository
 
 	//  получаем даты с активными круизами
 	public function getDays() {
+		$dateTime = date("Y-m-d H:i:s",strtotime(" +1 hour"));
+		
 		$str = "SELECT c
 			FROM CruiseBundle:Cruise c
-			WHERE CONCAT(c.date , ' ' , c.time)  >= CURRENT_TIMESTAMP()			
+			WHERE CONCAT(c.date , ' ' , c.time)  >= :dateTime				
 			AND c.active = 1
 			GROUP BY c.date
 			ORDER BY c.date
 			";
-   		$q = $this->_em->createQuery($str);
+   		$q = $this->_em->createQuery($str)
+		->setParameter('dateTime', $dateTime)
+		;
    		return $q->getResult();
 	}	
 	
 	
 	//  получаем дату ближайшего круиза
 	public function getNearestDate() {
+		
+		$dateTime = date("Y-m-d H:i:s",strtotime(" +1 hour"));
+		
 		$str = "SELECT c
 			FROM CruiseBundle:Cruise c
-			WHERE CONCAT(c.date , ' ' , c.time)  >= CURRENT_TIMESTAMP()			
+			WHERE CONCAT(c.date , ' ' , c.time)   >= :dateTime		
 			AND c.active = 1
 			GROUP BY c.date
 			ORDER BY c.date
 			";
-   		$q = $this->_em->createQuery($str);
+   		$q = $this->_em->createQuery($str)
+		->setParameter('dateTime', $dateTime)
+		;
 		$q->setMaxResults(1);
    		return $q->getOneOrNullResult();
 	}	
@@ -68,6 +77,7 @@ class CruiseRepository extends \Doctrine\ORM\EntityRepository
 			LEFT JOIN oc.ordering oco
 			
 			WHERE c.id = $id
+			AND oco.status = 1
 			";	
    		$q = $this->_em->createQuery($str);
    		return $q->getOneOrNullResult();	/// осталось присоединить Ordering		

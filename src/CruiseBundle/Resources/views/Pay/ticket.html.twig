@@ -17,17 +17,28 @@ body {
 	min-height:100%;
 }
 
+td {
+   font-family: 'PT Sans';;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+
 table.table-ticket {
 	width:100%;
-	border:1px solid #ccc;
+	/*border:1px solid #ccc;*/
 	margin:0 auto;
 }
 table.table-ticket > tbody > tr > td {
 	padding:3px;
+	font-size:10px;
 }
 
 table.table-ticket > tbody > tr > td td {
 	padding:3px 5px 3px 0;
+	font-size:10px;
 }
 
 
@@ -44,12 +55,40 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 
 .t_header table td {
 	padding:2px 5px;
+	font-size:8px;
+	font-weight:700;
+	
 }
 .t_header {
 	font-size:12px;
 }
 
+.t_header > tbody > tr > td {
+border:1px solid #ccc;
+}
 
+
+.prices {
+	width:100%;
+}
+
+.prices td {
+	border: 1px solid #ccc;
+	padding: 3px !important;
+}
+
+
+ul {
+	padding:0;
+}
+
+ul>li {
+	list-style-position: inside;
+}
+
+table.footer td {
+	border: 1px solid #ccc;
+}
 
 </style>	
 	
@@ -80,10 +119,14 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 		
 		{% endif %}</h1>-->
 
-		
+{#{dump()}#}		
 	<table class="t_header" style="margin-bottom:10px;">
-	
-	<tr><td>	<img src="{{absolute_url(asset('img/order_logo.jpg')) }}" style="width:150px" /></td>
+	<tbody>
+	<tr>
+		
+		<td>	
+			<img src="{{absolute_url(asset('img/order_logo.jpg')) }}" style="width:100px" />
+		</td>
 		<td style="width: 700px; ">
 			<table style="width:100%;">
 				<tr><td>ООО «ВодоходЪ»</td></tr>
@@ -93,22 +136,139 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 				<tr><td>р/с № 407 028 102 383 601 061 83, в Московком банке Сбербанка России ОАО</td></tr>
 				<tr><td>Кор/счет 301 018 104 000 000 002 25, БИК 044525225, ОКПО 72049650, ОГРН 1047796094697</td></tr>
 			</table>
-		</td></tr>
-	</table>		
-
-
-	<br>
-
-	
-	
+			
+			
+			
+			
+		</td>
+		<td>	
+			<img src="{{absolute_url(asset('img/order_logo.jpg')) }}" style="width:100px" />
+		</td>
+		<td style="width: 700px; ">
+			<table style="width:100%;">
+				<tr><td>ООО «ВодоходЪ»</td></tr>
+				<tr><td>125284, г.Москва, Скаковая аллея, д. 11</td></tr>
+				<tr><td>ИНН 7707511820 КПП 771401001</td></tr>
+				<tr><td>Реестровый номер туроператора серия РТО №002057</td></tr>
+				<tr><td>р/с № 407 028 102 383 601 061 83, в Московком банке Сбербанка России ОАО</td></tr>
+				<tr><td>Кор/счет 301 018 104 000 000 002 25, БИК 044525225, ОКПО 72049650, ОГРН 1047796094697</td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
 <table class="table-ticket">
 <tbody>
 
 	<tr>
-		<td>Номер заказа</td>
-		<td>{{order.id}}</td>
+		<td colspan="2">Билет на т/х «Метеор» №{{order.id}} </td>
+		
+	</tr>
+{% for cruise in order.cruises %}
+
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	<tr>
+		<td>Дата отправления</td>
+		<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} </td>
+	</tr>	
+	<tr>
+		<td>Время отправления</td>
+		<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
+	</tr>		
+	<tr>
+		<td>Место отправления</td>
+		<td>{{cruise.direction.placeStart}}</td>
 	</tr>
 	
+
+
+
+{% endfor %}	
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	<tr>
+		<td>Маршрут</td>
+		<td>
+		{% if order.cruises|length == 2 %}
+		Санкт-Петербург – ГМЗ Петергоф – Санкт-Петербург
+		{% elseif order.cruises|length == 1 %}
+			{% for cruise in order.cruises %}
+				
+				
+				{#{cruise.direction.name}#}
+				
+				
+				{% if cruise.direction.id == 1 %}
+				Санкт-Петербург – ГМЗ Петергоф
+				{% elseif cruise.direction.id == 2 %}
+				ГМЗ Петергоф – Санкт-Петербург
+				{% endif %}
+			{% endfor %}
+		
+		{% endif %}
+		</td>
+	</tr>
+
+	
+	
+	
+<tr>
+	<td colspan="2" style="padding:0;" >
+<table class="prices">
+<tr>
+	<td style="width:130px;">Категория</td>
+	<td>Кол-во</td>
+	<td>Цена, руб.</td>
+	<td>Сумма, руб.</td>
+</tr>
+{% set summ = 0 %}
+{% set places = 0 %}
+{% for category in order.category %}
+
+	{% set item_summ = 0 %}
+	{% set item_price = 0 %}
+	{% for orderCruise in category.orderCruises %}
+
+		{% set item_summ = item_summ + (orderCruise.price * orderCruise.count) %}
+		{% set item_price = item_price + (orderCruise.price ) %}
+
+	{% endfor %}
+
+	{% set summ = summ + item_summ %}
+	{% set places = places + category.count %}
+
+	<tr>
+		<td>{{category.category.name}}</td>
+		
+		<td><span>{{category.count}}</span></td>
+		<td><span>{{item_price}}</span></td>
+		<td><span>{{item_summ}}</span></td>
+		
+	</tr>
+
+{% endfor %}
+<tr>
+	<td style="text-align:right;"><b>Итого:</b></td>
+	<td><b>{{places}}</b></td>
+	<td></td>
+	<td><b>{{summ}}</b></td>
+</tr>
+
+
+</table>
+	</td>
+</tr>	
+
+
+
+
+
+
 	
 	<tr>
 		<td>Заказчик</td>
@@ -125,21 +285,66 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 		<td>{{order.email}}</td>
 	</tr>
 	
+
+
+	
+	
+	
+</tbody>	
+</table>
+		
+		</td>
+
+		<td colspan="2">
+<table class="table-ticket">
+<tbody>
+
 	<tr>
-		<td>Направление</td>
+		<td colspan="2">Корешок Билета на т/х «Метеор» №{{order.id}} </td>
+		
+	</tr>
+{% for cruise in order.cruises %}
+
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	<tr>
+		<td>Дата отправления</td>
+		<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} </td>
+	</tr>	
+	<tr>
+		<td>Время отправления</td>
+		<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
+	</tr>		
+	<tr>
+		<td>Место отправления</td>
+		<td>{{cruise.direction.placeStart}}</td>
+	</tr>
+	
+
+
+
+{% endfor %}	
+	<tr>
+		<td> &nbsp; </td>
+		<td> &nbsp; </td>
+	</tr>
+	<tr>
+		<td>Маршрут</td>
 		<td>
 		{% if order.cruises|length == 2 %}
 		Санкт-Петербург – ГМЗ Петергоф – Санкт-Петербург
 		{% elseif order.cruises|length == 1 %}
-			{% for key,cruise in order.cruises %}
+			{% for cruise in order.cruises %}
 				
 				
 				{#{cruise.direction.name}#}
 				
 				
-				{% if key == 1 %}
+				{% if cruise.direction.id == 1 %}
 				Санкт-Петербург – ГМЗ Петергоф
-				{% elseif key == 2 %}
+				{% elseif cruise.direction.id == 2 %}
 				ГМЗ Петергоф – Санкт-Петербург
 				{% endif %}
 			{% endfor %}
@@ -148,38 +353,20 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 		</td>
 	</tr>
 
-{% for cruise in order.cruises %}
-
-	<tr>
-		<td> &nbsp; </td>
-		<td> &nbsp; </td>
-	</tr>
 	
-	<tr>
-		<td>Место отправления</td>
-		<td>{{cruise.direction.placeStart}}</td>
-	</tr>
-	
-	<tr>
-		<td>Дата и время: </td>
-		<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }} {{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
-	</tr>	
-
-
-{% endfor %}
-
-	<tr>
-		<td> &nbsp; </td>
-		<td> &nbsp; </td>
-	</tr>
 	
 	
 <tr>
-	<td>Пассажиры</td>
-	<td>
-<table>
-
+	<td colspan="2" style="padding:0;" >
+<table class="prices">
+<tr>
+	<td style="width:130px;">Категория</td>
+	<td>Кол-во</td>
+	<td>Цена, руб.</td>
+	<td>Сумма, руб.</td>
+</tr>
 {% set summ = 0 %}
+{% set places = 0 %}
 {% for category in order.category %}
 
 	{% set item_summ = 0 %}
@@ -192,41 +379,81 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 	{% endfor %}
 
 	{% set summ = summ + item_summ %}
+	{% set places = places + category.count %}
 
 	<tr>
 		<td>{{category.category.name}}</td>
-		<td><span>{{category.count}} чел.</span></td>
-		<td><span> Стоимость {{item_price}}  руб.</span></td>
-		<td><span> Сумма {{item_summ}}  руб.</span></td>
+		
+		<td><span>{{category.count}}</span></td>
+		<td><span>{{item_price}}</span></td>
+		<td><span>{{item_summ}}</span></td>
+		
 	</tr>
 
 {% endfor %}
+<tr>
+	<td style="text-align:right;"><b>Итого:</b></td>
+	<td><b>{{places}}</b></td>
+	<td></td>
+	<td><b>{{summ}}</b></td>
+</tr>
+
+
 </table>
 	</td>
 </tr>	
+
+
+
+
+
+
+	
+	<tr>
+		<td>Заказчик</td>
+		<td>{{order.name}}</td>
+	</tr>	
 	
 	<tr>
 		<td></td>
-		<td><div class="result">Итого: {{summ}} руб.</div></td>
+		<td>{{order.phone}}</td>
+	</tr>	
+	
+	<tr>
+		<td></td>
+		<td>{{order.email}}</td>
 	</tr>
 	
+
+
 
 	
 	
 	
 </tbody>	
 </table>
+		
+		</td>
+	</tr>
+	<tbody>
+	</table>		
+
+
+	<br>
+
+	
+	
 
 	<div style="width:100%; border-bottom:3px dotted #000; margin:10px 0;"></div>
 
-<span style="margin:0 auto; font-size:24px;">Правила посадки на теплоход</span>	<hr />
-<div style="font-size:10px;">	
-<p><span style="font-size:14px">Перед посадкой на теплоход необходимо распечатать билет.</span> При этом билет, купленный по льготному тарифу, предоставляется с предъявлением подтверждающих документов (свидетельство о рождении, пенсионное свидетельство, иные документы).</p>	
-<p>С билетом пассажир следует на теплоход. Отправление от причала (причал указывается в билете). Посадка на теплоход начинается за 20 минут и заканчивается за 2 минуты до отправления теплохода в рейс. При посадке ответственный за посадку контролер или администратор сверяет данные, указанные в билете (дату и время отправления), отрывает контрольный корешок билета. Билет действует только на рейс, дату и время, указанные в нем. </p>	
-<p>Билет на поездку сохраняйте в течение всей поездки. Он может быть затребован сотрудниками ООО «ВодоходЪ» или иными проверяющими органами, осуществляющими контроль продажи билетов и соблюдения требований посадки/высадки пассажиров во время рейса, либо по прибытии теплохода в пункт назначения.</p>	
-<p>Пассажир к перевозке не допускается:<br />
- - не предъявивший билет;<br />
- - предъявивший билет, но не представивший документ на право проезда по льготному тарифу.
+<span style="margin:0 auto; font-size:24px;">Правила посадки на т/х «Метеор»</span>	<hr />
+<div style="font-size:12px; font-weight:900;">	
+<p>
+При посадке на теплоход пассажир обязан предъявить билет в распечатанном  виде.<br>
+Посадка начинается за 15 минут и заканчивается за  2 минуты до отправления теплохода в рейс в порядке общей очереди. При наличии льготных пассажиров, необходимо предъявить документ подтверждающий льготу контролеру при посадке. Билет  действует  только на рейс, дату и время, указанные в нем.<br>
+К перевозке не допускается пассажир:<br>
+-не предъявивший билет;<br>
+-предъявивший билет, но не предоставивший документ на право проезда по льготному тарифу.
 </p>	
 
 </div>	
@@ -235,45 +462,78 @@ table.table-ticket > tbody > tr:nth-child(2n) {
 	<div style="width:100%; border-bottom:3px dotted #000; margin:10px 0;"></div>
 	
 	
-	<span style="margin:0 auto; font-size:24px;">Правила поведения на прогулочном теплоходе</span>
+	<span style="margin:0 auto; font-size:24px;">Правила поведения на т/х «Метеор»</span>
 	<hr />
 	<table style="font-size:10px;">
 		<tr>
 			<td style="width:300px; vertical-align: top;">
 			<p>
-			Компания «ВодоходЪ» всегда уделяет повышенное внимание безопасности перевозки пассажиров, принимая все необходимые действия для её обеспечения. Предлагаем вашему вниманию основные правила по технике безопасности на прогулочном флоте.
+			Компания «Водоход» всегда уделяет повышенное внимание безопасности перевозки пассажиров, принимая все необходимые действия для её обеспечения.<br>
+			Предлагаем вашему вниманию основные правила по технике безопасности на теплоходе «Метеор».
+
 			</p>
 			<ul> 
-			  <li>Пользователь, оформляющий электронные билеты действует от имени всех пассажиров заказа, в связи с чем, все пассажиры заказа считаются проинформированными о правилах поведения на прогулочном теплоходе, условиях посадки, проезда и высадки. </li> 
-			  <li>На протяжении маршрута пассажиры обязаны соблюдать правила безопасности и выполнять все распоряжения экипажа судна. Это одно из важнейших условий безопасности для Вас и других пассажиров</li> 
-			  <li>Курить разрешается только в специально отведенных местах</li> 
+			  <li>Пользователь, оформляющий электронные билеты, действует от имени всех пассажиров заказа, в связи с чем, все пассажиры заказа считаются информированными о правилах поведения на теплоходе, условиях посадки, проезда и высадки.</li> 
+			  <li>На протяжении маршрута пассажиры обязаны соблюдать правила безопасности и выполнять все распоряжения экипажа судна. Это одно из важнейших условий безопасности для вас и других пассажиров.</li> 
 			</ul>
 			</td>
 			<td style="width:400px; vertical-align: top; padding:5px;">
 				<b>На борту теплохода запрещается:</b>			
 				<ul> 
 				  <li>выходить за ограждения судна, купаться с борта судна и непосредственной близости от судна;</li> 
-				  <li>на ходу и во время стоянки наклоняться через ограждения открытых палуб, сидеть на леерных ограждениях;</li> 
-				  <li>бегать по трапам, подниматься и сходить с трапа, не держась за поручни;</li> 
-				  <li>пользоваться электробытовыми приборами от электрической сети судна;</li> 
-				  <li>проводить на борт теплохода животных, в том числе кошек и собак;</li> 
-				  <li>проносить на борт судна вещи, относящиеся к категории опасных и нелегальных (сжатые газы, едкие вещества, оружие, взрывчатые и горючие вещества, наркотики, радиоактивные материалы, яды, инфекционные материалы и т. д.);</li> 
-				  <li>оставлять детей без присмотра;</li> 
-				  <li>злоупотреблять спиртными напитками;</li> 
-				  <li>находиться в нетрезвом состоянии или состоянии наркотического опьянения;</li> 
-				  <li>мусорить на борту судна, а также выбрасывать мусор за борт;</li> 
+				  <li>на ходу и во время стоянки наклоняться через ограждения открытых палуб, сидеть на леерных ограждениях;</li>
+				  <li>бегать по трапам, подниматься и сходить с трапа, не держась за поручни;</li>
+				  <li>пользоваться электробытовыми приборами от электрической сети судна;</li>
+				  <li>проводить на борт судна животных, в том числе собак и кошек;</li>
+				  <li>приносить на борт судна вещи, относящиеся к категории опасных и нелегальных (сжатые газы, едкие вещества, оружие, взрывчатые и горючие вещества, наркотики, радиоактивные материалы, яды, инфекционные материалы и т.д.)</li>
+				  <li>находиться в нетрезвом состоянии или состоянии наркотического опьянения;</li>
+				  <li>мусорить на борту судна и выбрасывать мусор за борт.</li>
+
+
 				</ul>			
 			</td>
 			<td style="width:260px; vertical-align: top;">
 				<b>Ответственность пассажира:</b>
 				<ul> 
-				  <li>пассажир несет ответственность, включая финансовую, за любые совершенные им действия или решения, принимаемые в ходе поездки, а также за ущерб, нанесенный имуществу других лиц, судовладельца и т. д.;</li> 
-				  <li>пассажир несет ответственность за нарушение действующих правил проезда и провоза багажа;</li> 
-				  <li>пассажир несет ответственность за действия, которые могут создать угрозу для жизни и здоровья других пассажиров, как окружающих людей, так и его самого;</li> 
-				  <li>пассажиры, нарушающие установленные нормы поведения снимаются с маршрута без компенсации.</li> 
+				  <li>пассажир несет ответственность, включая финансовую, за любые совершенные им действия или решения, принимаемые в ходе поездки, а также за ущерб, нанесенный имуществу других лиц, судовладельца и т.д.;</li>
+				  <li>пассажир несет ответственность за нарушение действующих правил проезда и провоза багажа;</li>
+				  <li>пассажир несет ответственность за действия, которые могут создать угрозу для жизни и здоровья других пассажиров, как окружающих людей, так и его самого;</li>
+				  <li>пассажиры, нарушающие установленные нормы поведения снимаются с маршрута без компенсации.</li>
 				</ul>			
 			</td>
 		</tr>
+	</table>
+	
+	<table class="footer" style="    width: 100%;">
+		<tbody>
+			<tr>
+				<td style="text-align:center;">
+				
+	<span style="font-size:16px; font-weight:900;">
+	Причал в Санкт-Петербурге<br>
+	 «Эрмитаж нижний»<br>
+	г. Санкт-Петербург, Дворцовая наб., д.39<br>
+	<span style="font-size:14px;">напротив центрального входа в Эрмитаж</span>
+	</span>
+				
+				</td>
+				<td  style="text-align:center;">
+<span style="font-size:16px; font-weight:900;">
+Причал в ГМЗ «Петергоф»<br>
+Причалы № 3 и № 6<br>
+Нижний парк ГМЗ «Петергоф»
+
+</span>				
+				
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"  style="text-align:center;">
+<span style="font-size:16px; font-weight:900; line-height:30px;">(812)335-17-17   &nbsp; &nbsp; &nbsp;           vodohod.spb.ru		</span>		
+				</td>
+				
+			</tr>
+		</tbody>
 	</table>
 	
 </body>

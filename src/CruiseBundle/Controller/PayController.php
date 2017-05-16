@@ -20,6 +20,12 @@ class PayController extends Controller
 	{
 		$session = $request->getSession();
 		$order_id = $session->get('order');
+
+		if(null == $order_id)
+		{
+			return $this->redirectToRoute('homepage');
+		}
+		
 		
 		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($order_id);
 		
@@ -64,7 +70,7 @@ class PayController extends Controller
 		$url_redirect = "https://www.pps.gazprombank.ru:443/payment/start.wsm?lang=RU".
 			"&merch_id=819879E11103E1BD879D651446DE601B".
 			"&back_url_s=https://vodohod.spb.ru/smallfleet/order/success".
-			"&back_url_f=https://vodohod.spb.ru/smallfleet/order/fail".
+			"&back_url_f=https://vodohod.spb.ru/smallfleet/order".
 			"&o.order_id=$order_id"/*.
 			/*"&o.amount=".$sum*100*/ ;		
 		
@@ -119,20 +125,20 @@ class PayController extends Controller
 			->setSubject('Электронный билет на речную прогулку №'.$order_id)
 			->setFrom(array('nobody@vodohod.com'=>'Интернет-магазин «ВодоходЪ СПб»'))
 			->setTo(array($email))
-			->setCc(array('dkochetkov@vodohod.ru'))
+			->setBcc(array('dkochetkov@vodohod.ru'))
 
-			->setBody($body, 'text/html')
+			->setBody("Спасибо за покупку!", 'text/html')
 			
 			->attach(\Swift_Attachment::newInstance()
 				  ->setFilename('Билет.pdf')
 				  ->setContentType('application/pdf')
 				  ->setBody($file_pdf))	
-				  
+			/*	  
 			->attach(\Swift_Attachment::newInstance()
 				  ->setFilename('Билет.jpg')
 				  ->setContentType('image/jpg')
 				  ->setBody($file_img->getContent()))
-			
+			*/
 		;
 		$mailer->send($message);		
 		

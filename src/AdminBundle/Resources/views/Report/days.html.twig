@@ -1,0 +1,90 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+	{#{dump()}#}
+	
+<style>
+.report_excel td, .report_excel th {
+	border:1px solid #ddd;
+}
+.red {
+	color:#d51324;
+}		
+.green {
+	color:#28af07;
+}		
+.yellow {
+	color:#c6c378;
+}	
+
+</style>
+
+<br>
+
+<h1>Отчёт по количеству мест</h1>
+
+<br>
+<div class="row">
+
+
+
+
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+	<div class="col-sm-3">
+		
+	{{ form_widget(form.dateStart) }}
+	</div>
+	<div class="col-sm-3">
+    {{ form_widget(form.dateEnd) }}
+	</div>
+	<div class="col-sm-3">
+    {{ form_widget(form.submit) }}
+	</div>
+{{ form_end(form) }}
+</div>
+<br>
+<br>
+
+	
+<table class="table report_excel">
+{% for direction in arr_directions %}	
+	<tr>
+		<th>{{direction}}</th>
+		{% for date in arr_dates %}
+		<th>
+			{{date}}
+		</th>
+		{% endfor %}
+	</tr>
+	
+	{% for time in arr_times %}
+		{% if arr_orders[direction][time] is defined %}
+		<tr>
+			<td>{{time}}</td>
+		{% for date in arr_dates %}
+			<td>
+				{% if arr_orders[direction][time][date] is defined %}
+					
+					<span  style="font-weight:700;"
+					{% if ( arr_orders[direction][time][date] < 10 )  %} class="green"
+					{% elseif ( arr_orders[direction][time][date] < 20 ) and ( arr_orders[direction][time][date] >= 10 ) %} class="yellow" 
+					{% elseif ( arr_orders[direction][time][date] >= 20 )  %} class="red" {% endif %}
+					
+					>
+						{{arr_orders[direction][time][date]}}
+					</span>
+					
+				{% endif %}
+			
+			</td>
+		{% endfor %}
+		</tr>
+		{% endif %}
+	{% endfor %}
+{% endfor %}	
+</table>	
+
+	
+{% endblock %}	

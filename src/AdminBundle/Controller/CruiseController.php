@@ -16,6 +16,8 @@ use Liuggio\ExcelBundle;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Cruise controller.
@@ -29,21 +31,55 @@ class CruiseController extends Controller
      * Lists all Cruise entities.
      *
      * @Route("/", name="admin_cruise_index")
-     * @Method("GET")
 	 * @Template()		 
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+		
+		$cruise_form = new Cruise();
 
-        $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy([],['id' => 'DESC']);
+		$form = $this->createFormBuilder($cruise_form)
+				->add('date', DateType::class, ['label'=>'Дата','widget' => 'single_text','required'=> false])
+				->add('active',ChoiceType::class, ['choices'  => [
+													'Все' => null,
+													'Активен' => true,
+													'Неактивен' => false,
+												]])
+				->add('direction')
+				->add('submit', SubmitType::class,array('label' => 'Фильтровать'))
+				->getForm()
+			;	
+		$form->handleRequest($request);	
+		
+		$search = [];
+		if ($form->isSubmitted() && $form->isValid()) 
+		{
+			$cruise_form = $form->getData();
+			
+			
+			if(null != $cruise_form->getDate())
+			{
+			$search['date'] = 	$$cruise_form->getDate();
+			}
+			if(null != $cruise_form->getActive())
+			{
+			$search['active'] = 	$cruise_form->getActive();
+			}
+			if(null != $cruise_form->getDirection())
+			{
+			$search['direction'] = 	$cruise_form->getDirection();
+			}
+			
+		}		
+        $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy($search,['id' => 'DESC']);
 		
 		foreach($cruises as $cruise)
 		{
 			$cruise->freeCount = $em->getRepository('CruiseBundle:OrderCruise')->getFreeCountPlace($cruise->getId());
 		}
 		
-		return ['cruises'=>$cruises];
+		return ['cruises'=>$cruises,'form'=>$form->createView()];
     }
 
 

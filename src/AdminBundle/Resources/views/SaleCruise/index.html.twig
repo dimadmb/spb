@@ -3,28 +3,44 @@
 {% block body %}
 
 	
-	
+
+
+
 	
 	<table class="table">
 		<tr>
 			<th>ID</th>
-			<th>Направление</th>
+			
 			<th>Дата отправления</th>
+			<th>Направление</th>
 			<th>Время отправления</th>
 			<th>Мест для продажи</th>
 			<!--<th style="min-width: 340px;">Цены</th>-->
 			<th>Продано</th>
 			<th></th>
 		</tr>
+{{ form_start(form) }}
 
-	
+		
+		<tr>
+			<th></th>
+			<th>{{ form_widget(form.date) }}</th>
+			<th>{{ form_widget(form.direction) }}</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th>{{ form_widget(form.submit) }}</th>
+		</tr>
+
+{{ form_end(form) }}	
 
 	{% for cruise in cruises %}
 		
 		<tr>
 			<td>{{cruise.id}}</td>
-			<td>{{cruise.direction.name}}</td>
+			
 			<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }}</td>
+			<td>{{cruise.direction.name}}</td>
 			<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
 			<td>{{cruise.quantity}}</td>
 			<!--<td>

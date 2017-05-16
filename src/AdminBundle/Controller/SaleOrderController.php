@@ -6,6 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Cruise controller.
  *
@@ -19,11 +25,25 @@ class SaleOrderController extends Controller
      * @Route("/", name="admin_sale_order_index")
 	 * @Template()		 
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $orders = $em->getRepository('CruiseBundle:Ordering')->findBy([],['id' => 'DESC']);
+		$form = $this->createFormBuilder()
+				->add('date', DateType::class, ['label'=>'Дата','widget' => 'single_text','required'=> false])
+				->add('buyer',TextType::class,['required'=> false])
+				->add('submit', SubmitType::class,array('label' => 'Фильтровать'))
+				->getForm()
+			;	
+		$form->handleRequest($request);		
+		
+		$search = [];
+		if ($form->isSubmitted() && $form->isValid()) 
+		{
+			$search = $form->getData();
+		}		
+		
+        $orders = $em->getRepository('CruiseBundle:Ordering')->findBySaleOrder($search);
 		
 		foreach($orders as $order)
 		{
@@ -36,7 +56,7 @@ class SaleOrderController extends Controller
 		}
 
 		
-		return ['orders'=>$orders];
+		return ['orders'=>$orders,'form'=>$form->createView()];
     }
 	
     /**

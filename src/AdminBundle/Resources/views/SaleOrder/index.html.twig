@@ -25,6 +25,12 @@
 </style>
 
 
+{#{dump()}#}
+
+
+
+
+
 <table class="table">
 		<tr>
 			<th>Номер заказа</th>
@@ -34,6 +40,17 @@
 			<th>Оплачено</th>
 			<th></th>
 		</tr>
+{{ form_start(form) }}		
+		<tr>
+			<th>{{ form_widget(form.date) }}</th>
+			<th>{{ form_widget(form.buyer) }}</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th>{{ form_widget(form.submit) }}</th>
+		</tr>
+{{ form_end(form) }}		
+		
 	{% for order in orders %}
 		<tr {% if order.del == 1 %} class="deleted" {% endif %}>
 			<td>
@@ -63,7 +80,12 @@
 			{{summa}}
 			</td>
 			<td>{{order.trxAmount}}</td>
-			<td><a href="{{path('admin_sale_order_item',{'id':order.id})}}" class="btn btn-success">Детали</a></td>
+			<td>
+				<!--<a href="{{path('admin_sale_order_item',{'id':order.id})}}" class="btn btn-success">Детали</a>-->
+				{% if order.status == 1 %}
+				<a href="{{path('admin_get_ticket',{'id':order.id})}}" class="btn btn-success">Билет</a>
+				{% endif %}
+			</td>
 		</tr>
 	{% endfor %}
 	

@@ -11,8 +11,68 @@ use Symfony\Component\HttpFoundation\Response;
 use CruiseBundle\Entity\OrderCruise;
 use CruiseBundle\Entity\Ordering;
 
+
 class CruiseController extends Controller
 {
+    /**
+     * @Route("/feedback", name="feedback")
+	 * @Template()		 
+     */
+    public function feedbackAction(Request $request)
+	{
+
+		$form = $this->createForm('CruiseBundle\Form\FeedbackType');
+		$form->handleRequest($request);
+		
+		if ($form->isSubmitted() && $form->isValid()) 
+		{
+			$name = $request->request->get('name');
+			$email = $request->request->get('email');
+			$body = $request->request->get('body');
+			$subject = $request->request->get('subject');
+			
+			
+			$mailer = $this->get('mailer');
+			$message = \Swift_Message::newInstance()
+				->setSubject($subject)
+				//->setFrom(array('nobody@vodohod.com'=>'Интернет-магазин «ВодоходЪ СПб» Обратная связь'))
+				->setFrom(array('nobody@vodohod.com'=>'Интернет-магазин «ВодоходЪ СПб» Обратная связь'))
+				->setTo(array('dkochetkov@vodohod.ru'))
+				->setCc(array('dkochetkov@vodohod.ru'))
+
+
+				->setBody('email '.$email.'<br>Имя '.$name.'<br>Сообщение<br>'.$body, 'text/html')
+				
+
+				
+			;
+			$mailer->send($message);	
+
+			//$this->redirectToRoute('feedback');
+			
+			$request->getSession()->getFlashBag()->add('success', 'Ваше сообшение отправлено.');
+			
+			return $this->redirectToRoute('feedback');
+			
+			//$form->remove();
+			
+			
+		}
+
+
+		return ['form'=> $form->createView(),get_class_methods($form)];
+		
+	}
+    /**
+     * @Route("/rules", name="rules")
+	 * @Template()		 
+     */
+    public function rulesAction(Request $request)
+	{
+		return [];
+	}
+	
+	
     /**
      * @Route("/", name="homepage")
 	 * @Template()		 
@@ -187,6 +247,12 @@ class CruiseController extends Controller
 	{
 		$session = $request->getSession();
 		$order_id = $session->get('order');
+		
+		if(null == $order_id)
+		{
+			return $this->redirectToRoute('homepage');
+		}
+		
 		
         $em = $this->getDoctrine()->getManager();
         $order = $em->getRepository('CruiseBundle:Ordering')->findOneById($order_id);		

@@ -12,7 +12,7 @@
 	
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />	
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}Скоростной флот в Петергоф – ВодоходЪ Санкт-Петербург{% endblock %}</title>
 </head>
 <body>
 
@@ -133,7 +133,18 @@
          </table>
 
 		<div class="container">
-			<div class="row">
+			
+			
+
+
+
+			<div style="margin:10px 0 0 0;overflow: hidden;width: 300px;float: right;">
+				<div style="float:left;"><img style="margin:3px 5px; width:79px;" src="{{asset('img/logo-s/mir.png')}}" alt=""></div>
+				<div style="float:left;"><img style="margin:3px 5px; width:79px;" src="{{asset('img/logo-s/visa.png')}}" alt=""></div>
+				<div style="float:left;"><img style="margin:3px 5px; width:79px;" src="{{asset('img/logo-s/mc.png')}}" alt=""></div>
+				<div class="clear:both;"></div>
+			</div>
+			<div class="clear:both;"></div>
 			
 			<div>
 				{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -146,19 +157,21 @@
 						{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
 					</a>&nbsp;  
 					{% if is_granted('ROLE_SUPER_ADMIN') %}
-						 <a style="color:#fff;"  href="{{path('admin_sale_order_index')}}">Админка</a>
+						 <a style="color:#fff;"  href="{{path('admin_cruise_index')}}">Админка</a>
 					{% endif %}	
 					
 				{% else %}
 				   <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
 				{% endif %}
-			</div>			
-
-			</div>
+			</div>	
+			
 		</div>
 
 		 
        </div>
+	   
+	   
+	   
      </div>
 	</div>
 	

@@ -50,7 +50,9 @@ class OrderCruiseRepository extends \Doctrine\ORM\EntityRepository
 	public function getSaleCountPlace($cruise_id) {
 		$str = "SELECT  COALESCE(SUM(oc.count) ,0) sale_count
 			FROM CruiseBundle:OrderCruise oc
+			LEFT JOIN oc.ordering o
 			WHERE oc.cruise = $cruise_id
+			AND o.status = 1
 			";
    		$q = $this->_em->createQuery($str);
    		return $q->getOneOrNullResult()['sale_count'] * 1;

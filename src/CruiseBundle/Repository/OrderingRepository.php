@@ -2,6 +2,9 @@
 
 namespace CruiseBundle\Repository;
 
+//use Doctrine\ORM\EntityRepository;
+
+
 /**
  * OrderingRepository
  *
@@ -10,4 +13,101 @@ namespace CruiseBundle\Repository;
  */
 class OrderingRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function findBySaleOrder($search)
+	{
+		
+		$qb = $this->_em->createQueryBuilder();
+		
+		$qb->select('o')
+		   ->from('CruiseBundle:Ordering', 'o')
+		   ->leftJoin('CruiseBundle:OrderCruise','oc',\Doctrine\ORM\Query\Expr\Join::WITH, 'o.id = oc.ordering' )
+		   ->leftJoin('CruiseBundle:Cruise','c',\Doctrine\ORM\Query\Expr\Join::WITH, 'oc.cruise = c.id' )		
+		
+		   ->orderBy('o.id', 'DESC')
+		   ;
+
+		   
+		if(isset($search['date']) && (null != $search['date']))
+		{
+			$qb->andWhere('c.date = ?4');
+			$qb->setParameter(4, $search['date']);			
+		}
+				   
+		if(isset($search['buyer']) && (null != $search['buyer']))
+		{
+			$qb->andWhere($qb->expr()->orX(
+							$qb->expr()->like('o.name', '?2') , 
+							$qb->expr()->like('o.email', '?2') , 
+							$qb->expr()->like('o.phone', '?2') 
+							));
+			$qb->setParameter(2, '%'.$search['buyer'].'%');		
+		}
+		
+		
+		return $qb->getQuery()->getResult();	
+	}
+
+
+
+	public function findByDates($dateStart,$dateEnd) 
+	{
+		$str = "SELECT o,oc,c
+			FROM CruiseBundle:Ordering o
+			LEFT JOIN o.orderCruise oc
+			LEFT JOIN oc.cruise c
+
+			WHERE c.date >=	:dateStart
+			AND c.date <=	:dateEnd
+			
+			AND o.status = 1
+			";
+   		$q = $this->_em->createQuery($str)
+		->setParameter('dateStart', $dateStart)
+		->setParameter('dateEnd', $dateEnd)
+		;
+   		return $q->getResult();		
+	}
+
+
+	
+	public function findByOrders($orderId,$orderName,$route,$dateCruise) 
+	{
+		$qb = $this->_em->createQueryBuilder();
+		
+		$qb->select('o')
+		   ->from('CruiseBundle:Ordering', 'o')
+		   ->leftJoin('CruiseBundle:OrderCruise','oc',\Doctrine\ORM\Query\Expr\Join::WITH, 'o.id = oc.ordering' )
+		   ->leftJoin('CruiseBundle:Cruise','c',\Doctrine\ORM\Query\Expr\Join::WITH, 'oc.cruise = c.id' )
+		   //->where('o.status = ?1')
+		   
+		   ->where( $qb->expr()->eq('o.status', '?0') )		   
+		   ->orderBy('o.id', 'DESC')
+		   ;
+		$qb->setParameter(0, true);
+		
+		if($orderId != "")
+		{
+			$qb->andWhere($qb->expr()->eq('o.id', '?1'));
+			$qb->setParameter(1, $orderId);
+		}			
+		if($orderName != "")
+		{
+			$qb->andWhere($qb->expr()->like('o.name', '?2'));
+			$qb->setParameter(2, '%'.$orderName.'%');
+		}
+		
+		if($dateCruise != "")
+		{
+			$qb->andWhere($qb->expr()->like('c.date', '?4'));
+			$qb->setParameter(4, '%'.$dateCruise.'%');
+		}		
+		
+		
+		
+		return $qb->getQuery()->getResult();			   
+
+
+
+	}	
+	
 }

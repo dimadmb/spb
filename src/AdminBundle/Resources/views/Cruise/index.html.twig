@@ -12,30 +12,47 @@
 	<table class="table">
 		<tr>
 			<th>ID</th>
-			<th>Направление</th>
+			<th>Активен</th>
+			
 			<th>Дата отправления</th>
+			<th>Направление</th>
+			
 			<th>Время отправления</th>
 			<th>Мест для продажи</th>
-			<th style="min-width: 340px;">Цены</th>
+			<!--<th style="min-width: 340px;">Цены</th>-->
 			<th>Осталось свободно</th>
 			<th>Комментарий</th>
 			<th></th>
 		</tr>
-
+{{ form_start(form) }}
+		<tr>
+			<th></th>
+			<th>{{ form_widget(form.active) }}</th>
+			<th>{{ form_widget(form.date) }}</th>
+			<th>{{ form_widget(form.direction) }}</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th>{{ form_widget(form.submit) }}</th>
+		</tr>
+{{ form_end(form) }}
 
 	{% for cruise in cruises %}
 		
 		<tr>
 			<td>{{cruise.id}}</td>
-			<td>{{cruise.direction.name}}</td>
+			<td>{% if cruise.active == 1 %} Активен {% endif %}</td>
+			
 			<td>{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y (eee)') }}</td>
+			<td>{{cruise.direction.name}}</td>
 			<td>{{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}</td>
 			<td>{{cruise.quantity}}</td>
-			<td>
+			<!--<td>
 			{% for price in cruise.prices %}
 				{{price.category.name}} {{price.roundTrip.name}}  <span style="float:right; font-weight:700; ">{{price.price | number_format(0, '.', ' ') }} руб.</span><br>
 			{% endfor %}
-			</td>
+			</td>-->
 			<td>{{cruise.freeCount}}</td>
 			<td>{{cruise.comment}}</td>
 			<td><a href="{{path('admin_cruise_edit',{'id':cruise.id})}}" class="btn btn-success">Редактировать</a></td>

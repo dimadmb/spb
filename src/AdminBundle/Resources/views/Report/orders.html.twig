@@ -1,0 +1,104 @@
+{% extends '::baseadmin.html.twig' %}
+
+{% block body %}
+
+	{#{dump()}#}
+<style>
+.report_excel td, .report_excel th {
+	border:1px solid #ddd;
+}
+.red {
+	color:#d51324;
+}		
+.green {
+	color:#28af07;
+}		
+.yellow {
+	color:#c6c378;
+}	
+
+</style>	
+<br>
+
+<h1>Заказы</h1>
+
+<br>
+
+	
+<table class="table report_excel">
+	
+	<tr>
+		<th>Номер билета</th>
+		<th>Покупатель</th>
+		<th>Маршрут</th>
+		<th>Дата</th>
+		<th>Из СПБ</th>
+		<th>Из Петергофа</th>
+		<th>Действие</th>
+	</tr>
+
+{{ form_start(form) }}
+	<tr>
+		<th>{{ form_widget(form.id,{'attr': {'style': 'width:100px;'}}) }}</th>
+		<th>{{ form_widget(form.name) }}</th>
+		<th>{{ form_widget(form.route) }}</th>
+		<th>{{ form_widget(form.date) }}</th>
+		<th></th>
+		<th></th>
+		<th>{{ form_widget(form.submit) }}</th>
+	</tr>
+{{ form_end(form) }}
+	
+	
+	{% for order in orders %}
+	<tr>
+		<td>{{order.id}}</td>
+		<td>{{order.name}}</td>
+		<td>
+		{% if order.cruises|length == 2 %}
+						СПб – Петергоф – СПб
+						{% elseif order.cruises|length == 1 %}
+							{% for key,cruise in order.cruises %}
+								
+								
+								{#{cruise.direction.name}#}
+								
+								
+								{% if cruise.direction.id == 1 %}
+								СПб - Петергоф
+								{% elseif cruise.direction.id  == 2 %}
+								Петергоф - СПб
+								{% endif %}
+							{% endfor %}
+						
+						{% endif %}
+		</td>
+		<td>
+		{% for cruise in order.cruises %}
+			{% if loop.first %}
+				{{cruise.date | localizeddate('full', 'none', null, null, 'dd MMM Y') }} 
+			{% endif %}
+		{% endfor %}		
+
+		</td>
+		<td>
+		{% for cruise in order.cruises %}
+			{% if cruise.direction.id == 1 %}
+				 {{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}
+			{% endif %}
+		{% endfor %}
+		</td>
+		<td>
+		{% for cruise in order.cruises %}
+			{% if cruise.direction.id == 2 %}
+				 {{cruise.time | localizeddate('full', 'none', null, null, 'HH : mm') }}
+			{% endif %}
+		{% endfor %}		
+		</td>
+		<td><a href="{{path('admin_get_ticket',{'id': order.id})}}" class="btn btn-success">Билет</a></td>
+	</tr>
+	{% endfor %}
+</table>	
+
+{% endblock %}	
+	

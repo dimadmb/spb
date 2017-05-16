@@ -64,6 +64,7 @@ class GazController extends Controller
 		{
 			$a = $this->forward('CruiseBundle:Pay:mail',['id'=>$order_id]);
 			$order->setStatus(1);
+			$order->setDel(0);
 			$order->setTrxAmount($amount/100);
 			$order->setTrx(print_r($request->query->all(),1));
 			

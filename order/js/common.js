@@ -1,7 +1,10 @@
 $(document).ready(function(){
 	
 $(function () {
-    var tabContainers = $('div.tabs > div');
+    
+	console.log(location.hash);
+	
+	var tabContainers = $('div.tabs > div');
     tabContainers.hide().filter(':first').show();
     $('div.tabs ul.tabNavigation a').click(function () {
         tabContainers.hide();
@@ -10,6 +13,11 @@ $(function () {
         $(this).addClass('selected');
         return false;
     }).filter(':first').click();
+	
+	if(location.hash != "") 
+	{
+		$('div.tabs ul.tabNavigation a[href="' + location.hash + '"]').click();
+	}
 });
 
 jQuery(function ($) {

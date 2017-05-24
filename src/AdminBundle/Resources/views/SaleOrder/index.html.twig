@@ -52,7 +52,7 @@
 {{ form_end(form) }}		
 		
 	{% for order in orders %}
-		<tr {% if order.del == 1 %} class="deleted" {% endif %}>
+		<tr {% if order.del == 1 %} class="deleted"  style="display: none;" {% endif %}>
 			<td>
 			<b>{{order.id}}</b>
 			{% for  cruise in order.cruises %}

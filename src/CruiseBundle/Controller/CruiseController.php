@@ -159,7 +159,7 @@ class CruiseController extends Controller
 				// сделать проверку на доступность мест
 				if($summPlace > $this->getDoctrine()->getRepository('CruiseBundle:OrderCruise')->getFreeCountPlace($$cruise->getId()))
 				{
-					$error[] = "Количество запрошеных мест превышает количество свободных";
+					$error[] = "Количество запрошеных мест (". $summPlace .") превышает количество свободных (" . $this->getDoctrine()->getRepository('CruiseBundle:OrderCruise')->getFreeCountPlace($$cruise->getId()).") в круизе на ".$$cruise->getTime()->format("H:i");
 				}
 				
 			}
@@ -275,5 +275,30 @@ class CruiseController extends Controller
 		
 		return [$request,'order'=>$order];
 	}
+
+	
+	
+    /**
+     * @Route("/date-arr", name="date_arr")
+	 * @Template()		 
+     */
+    public function dateArrayAction()  
+	{
+		$cruiseDays = $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->getDays();
+		
+		$arr = [];
+		
+		//dump($cruiseDays);
+		
+		foreach($cruiseDays as $cruiseDay)
+		{
+			$arr[] = $cruiseDay->getDate()->format('"Y-m-d"');
+		}
+		
+		$string = 'var arrayGlobalActiveDate = ['.implode(',',$arr).']';
+		
+		return ['string'=>$string];
+	}	
+	
 	
 }

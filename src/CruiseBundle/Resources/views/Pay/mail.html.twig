@@ -2,8 +2,10 @@
 
 {% block body %}
 
-{#{dump()}#}
+{#{dump(cruises)}#}
 
-{{body|raw}}
+{% for body in bodyes %}
+	{{body|raw}}
+{% endfor %}
 
 {% endblock %}

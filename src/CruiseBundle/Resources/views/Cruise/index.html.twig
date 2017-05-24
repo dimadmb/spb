@@ -6,6 +6,13 @@
 
 {% block body %}
 
+
+{% if error is defined %}
+	{% for er in error %}
+		<p style="color:red;font-weight: 900;font-size: 20px; line-height: 30px;">{{er | raw}}</p>
+	{% endfor %}
+{% endif %}
+
 {#{dump()}#}
 		<aside class="right-form">
 			<div class="zag">Купить билеты онлайн</div>
@@ -40,7 +47,8 @@
 				</div>				
 				
 				{#{ render(controller('CruiseBundle:Calendar:index')) }#}
-				{{ render(controller('CruiseBundle:Calendar:dateArray')) }}
+				{#{ render(controller('CruiseBundle:Calendar:dateArray')) }#}
+				{{ render(controller('CruiseBundle:Cruise:dateArray')) }}
 
 				<div id="times">
 					{{ render(controller('CruiseBundle:Cruise:cruise')) }}
@@ -101,7 +109,7 @@
 			var cruise1 = $('select[name="cruise1"]').find('option:selected');
 			var cruise2 = $('select[name="cruise2"]').find('option:selected');
 			
-			if(cruise1.length == 0 && cruise1.length == 0) return false;
+			if(cruise1.length == 0 && cruise2.length == 0) return false;
 			
 			$('input#roundTrip2').removeAttr('disabled');
 			
@@ -282,6 +290,9 @@
 			  success: function(html){
 				$('div#times').html(html);
 				$('input:radio[name="roundTrip"]').trigger('change');
+		$('#times #cruise2').children("option:not([disabled]):last").prop("selected", "selected");
+		
+		$('#cruise1,#cruise2').trigger('change');
 			  }
 			});
 		});
@@ -312,7 +323,7 @@
 			})
 			if ( $('#times #cruise2').children("option:selected").attr('data-timestamp')*1 < $('#times #cruise2').children("option:not([disabled]):first").attr('data-timestamp')*1 )
 			{
-				$('#times #cruise2').children("option:not([disabled]):first").attr("selected", "selected");
+				$('#times #cruise2').children("option:not([disabled]):first").prop("selected", "selected");
 			}
 
 			setPrices();
@@ -339,7 +350,7 @@
 			})
 			if ( $('#times #cruise1').children("option:selected").attr('data-timestamp')*1 > $('#times #cruise1').children("option:not([disabled]):last").attr('data-timestamp')*1 )
 			{
-				$('#times #cruise1').children("option:not([disabled]):first").attr("selected", "selected");
+				$('#times #cruise1').children("option:not([disabled]):first").prop("selected", "selected");
 			}
 			
 			setPrices();
@@ -414,7 +425,12 @@
 				
 				setPrices();
 		});
+		
+		$('#times #cruise2').children("option:not([disabled]):last").prop("selected", "selected");
+		
 		$('#cruise1,#cruise2').trigger('change');
+		
+		//
 
 	});
 </script>	

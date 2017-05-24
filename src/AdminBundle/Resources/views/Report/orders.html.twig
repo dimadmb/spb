@@ -95,7 +95,12 @@
 			{% endif %}
 		{% endfor %}		
 		</td>
-		<td><a href="{{path('admin_get_ticket',{'id': order.id})}}" class="btn btn-success">Билет</a></td>
+		<td>
+					{% for cruise in order.cruises %}
+					
+					<a href="{{path('admin_get_ticket',{'id': order.id, 'cruiseId' : cruise.id })}}" class="btn btn-success">Билет {{cruise.direction.id}}</a> 
+					{% endfor %}
+		</td>
 	</tr>
 	{% endfor %}
 </table>	

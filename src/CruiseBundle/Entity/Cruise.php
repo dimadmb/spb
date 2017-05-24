@@ -82,7 +82,9 @@ class Cruise
 	
 	public function __toString()
 	{
-		return date('Y-m-d H:i',$this->datetime->getTimestamp()).' => '.$this->direction->getName();
+		//return "test";
+		
+		return date('Y-m-d ',$this->date->getTimestamp()).date('H:i',$this->time->getTimestamp()).' => '.$this->direction->getName();
 	}
 
     /**

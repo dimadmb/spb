@@ -83,7 +83,10 @@
 			<td>
 				<!--<a href="{{path('admin_sale_order_item',{'id':order.id})}}" class="btn btn-success">Детали</a>-->
 				{% if order.status == 1 %}
-				<a href="{{path('admin_get_ticket',{'id':order.id})}}" class="btn btn-success">Билет</a>
+					{% for cruise in order.cruises %}
+					
+					<a href="{{path('admin_get_ticket',{'id': order.id, 'cruiseId' : cruise.id })}}" class="btn btn-success">Билет {{cruise.direction.id}}</a> 
+					{% endfor %}
 				{% endif %}
 			</td>
 		</tr>

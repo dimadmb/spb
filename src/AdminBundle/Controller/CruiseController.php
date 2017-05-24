@@ -60,9 +60,9 @@ class CruiseController extends Controller
 			
 			if(null != $cruise_form->getDate())
 			{
-			$search['date'] = 	$$cruise_form->getDate();
+			$search['date'] = 	$cruise_form->getDate();
 			}
-			if(null != $cruise_form->getActive())
+			if(null !== $cruise_form->getActive())
 			{
 			$search['active'] = 	$cruise_form->getActive();
 			}
@@ -72,14 +72,14 @@ class CruiseController extends Controller
 			}
 			
 		}		
-        $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy($search,['id' => 'DESC']);
+        $cruises = $em->getRepository('CruiseBundle:Cruise')->findBy($search,['id' => 'DESC'],100);
 		
 		foreach($cruises as $cruise)
 		{
 			$cruise->freeCount = $em->getRepository('CruiseBundle:OrderCruise')->getFreeCountPlace($cruise->getId());
 		}
 		
-		return ['cruises'=>$cruises,'form'=>$form->createView()];
+		return ['cruises'=>$cruises,'form'=>$form->createView(),];
     }
 
 

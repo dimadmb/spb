@@ -16,20 +16,22 @@ use Symfony\Component\HttpFoundation\Response;
 class ReportController extends Controller
 {
 
-	
 
 
 	/**
-     * @Route("/ticket/{id}", name="admin_get_ticket")
+     * @Route("/ticket/{id}/{cruiseId}", name="admin_get_ticket")
 	 * @Template("dump.html.twig")		 
      */
-    public function testAction(Request $request,$id)
+    public function ticketAction(Request $request,$id,$cruiseId)
 	{
 		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($id);
-		$email = $order->getEmail();
+		
+		$order = $this->extOrder($order);
+		
+		$cruise = $this->getDoctrine()->getRepository('CruiseBundle:Cruise')->findOneById($cruiseId);
 	
 		
-		$body = $this->render('CruiseBundle:Pay:ticket.html.twig',['order'=>$this->extOrder($id)])->getContent();
+		$body = $this->renderView('CruiseBundle:Pay:ticket.html.twig',['order'=>$order,'cruiseId'=>$cruiseId]);
 		
 		//$dump = get_class_methods($this->get('knp_snappy.pdf'));
 
@@ -38,10 +40,84 @@ class ReportController extends Controller
 			200,
 			array(
 				'Content-Type'          => 'application/pdf',
-				'Content-Disposition'   => 'attachment; filename="Билет'.$id.'.pdf"'
+				'Content-Disposition'   => 'attachment; filename="Билет '.$id.' '.$cruise->getDirection()->getName().'.pdf"'
 			)
 		);
 							
+	}	
+
+
+	/**
+     * @Route("/category", name="admin_sale_report_category")
+	 * @Template()		 
+     */
+    public function categoryAction(Request $request)
+	{
+		
+		$form = $this->createForm('AdminBundle\Form\DaysType');
+		$form->handleRequest($request);
+		
+		$dateStart =  '2010-01-01';
+		$dateEnd   =  '2040-12-01';
+		
+
+		
+		if ($form->isSubmitted() && $form->isValid()) 
+		{
+			$dateStart = null != $form->getData()['dateStart'] ? $form->getData()['dateStart'] : $dateStart;
+			$dateEnd   = null != $form->getData()['dateEnd'] ? $form->getData()['dateEnd'] : $dateEnd;
+		}
+		
+		$em = $this->getDoctrine()->getManager();
+		$orders = $em->getRepository('CruiseBundle:Ordering')->findByDates($dateStart,$dateEnd);
+		
+		$arr_orders = [];
+		$arr_dates = [];
+		$arr_category = [];
+		$arr_directions = [];
+		
+		foreach($orders as $order)
+		{
+			//определим направление круиза(ов) в заказе
+			$directions = [];
+			$categoryes = [];
+			$date = "";
+			foreach($order->getOrderCruise() as $orderCruise)
+			{
+				$directions[$orderCruise->getCruise()->getDirection()->getId()] = $orderCruise->getCruise()->getDirection()->getId();
+				$categoryes[$orderCruise->getCategory()->getName()] = $orderCruise->getCount();
+				$date = $orderCruise->getCruise()->getDate()->format('Y-m-d');
+				$arr_dates[$date] = $date;
+				
+				$arr_category[$orderCruise->getCategory()->getId()] = $orderCruise->getCategory()->getName();
+				
+			}
+			if(count($directions) == 2)
+			{
+				$direction = "СПб - Петергоф - СПб";
+			}
+			else
+			{
+				if(array_shift($directions) == 1) $direction = "СПб - Петергоф";
+				if(array_shift($directions) == 2) $direction = "Петергоф - СПб";
+			}
+			foreach($categoryes as $categoryName => $count)
+			{
+				$arr_orders[$direction][$categoryName][$date] = 
+				isset($arr_orders[$direction][$categoryName][$date]) ?
+				$arr_orders[$direction][$categoryName][$date] + $count :
+				$count;
+				
+			}
+			
+			$arr_directions[$direction] = $direction;
+		}
+		
+		asort($arr_directions);
+		asort($arr_dates);
+		rsort($arr_category);
+		
+		return ['orders'=>$orders,'arr_orders'=>$arr_orders, 'arr_dates'=>$arr_dates, 'arr_category' => $arr_category, 'arr_directions' => $arr_directions, 'form'=>$form->createView() ];		
 	}
 
 	/**
@@ -192,12 +268,12 @@ class ReportController extends Controller
 	}
 
 
-    private function extOrder($id = null)
+    private function extOrder($order = null)
 	{
-		$order_id = $id;
-		
-        $em = $this->getDoctrine()->getManager();
-        $order = $em->getRepository('CruiseBundle:Ordering')->findOneById($order_id);			
+		//$order_id = $id;
+		//
+        //$em = $this->getDoctrine()->getManager();
+        //$order = $em->getRepository('CruiseBundle:Ordering')->findOneById($order_id);			
 		$cruises = [];
 		$category = [];
 		foreach($order->getOrderCruise() as $orderCruise)
@@ -215,7 +291,7 @@ class ReportController extends Controller
 
 		
 		return $order;		
-	}	
+	}
 	
 	
 }

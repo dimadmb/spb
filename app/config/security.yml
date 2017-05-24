@@ -17,7 +17,7 @@ security:
 
     firewalls:
         gaz:
-            pattern: ^/gazprom
+            pattern: ^/order/gazprom
             http_basic: ~
             #stateless:  true
 
@@ -39,4 +39,4 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/gazprom/, role: ROLE_GAZ }
+        - { path: ^/order/gazprom/, role: ROLE_GAZ }

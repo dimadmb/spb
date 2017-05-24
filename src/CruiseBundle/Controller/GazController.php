@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Gazprom controller.
  *
- * @Route("/gazprom")
+ * @Route("/order/gazprom")
  */
 
 
@@ -68,11 +68,11 @@ class GazController extends Controller
 			$order->setTrxAmount($amount/100);
 			$order->setTrx(print_r($request->query->all(),1));
 			
-			
-			// Находим сертификат эквайера
-			
-			
-			$fp = "-----BEGIN CERTIFICATE-----
+		
+		$data_arr = explode("&signature=","https://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		$data = $data_arr[0];
+		$signature = base64_decode(urldecode($data_arr[1]));
+		$cert = $fp = "-----BEGIN CERTIFICATE-----
 MIIF+jCCBOKgAwIBAgIQK21JV7ngx17fODERFj2JbzANBgkqhkiG9w0BAQsFADB+MQswCQYDVQQG
 EwJVUzEdMBsGA1UEChMUU3ltYW50ZWMgQ29ycG9yYXRpb24xHzAdBgNVBAsTFlN5bWFudGVjIFRy
 dXN0IE5ldHdvcmsxLzAtBgNVBAMTJlN5bWFudGVjIENsYXNzIDMgU2VjdXJlIFNlcnZlciBDQSAt
@@ -101,18 +101,21 @@ zzCEaTIbh3ysTvUY8wXR2R9dBDRvMseJoV7JNXOHXKp+6D+prFoykWhY0UOdw1o+q4fGdK0X4duI
 0rDuThiJe0YJWWCcBo8yoM0ejsDA9fbyUH65LLVedMj4zesTX9YJXv2GZ9p2y6ZumPbaJ4TgLSFU
 YvMULcRGXXqCkrf4pXFBu1wsFB2NneCYyTETK3f8Clc0sOZmE/8gLY5Q7fXsF9AsmYaLPw==
 -----END CERTIFICATE-----";
-			
-			#$public_key = openssl_pkey_get_public ($cert);
-			#$signature_check = openssl_verify($data, $signature, $public_key, OPENSSL_ALGO_SHA1);
-			#openssl_free_key($public_key);
-			#
-			#
-			#$r = print_r($_REQUEST,1);
-			#file_put_contents('pay_r.txt',$r);			
+        // Достаем из сертификата публичный ключ
+        $public_key = openssl_pkey_get_public ($cert);
+
+        // Проверяем подпись и освобождаем ключ
+        $signature_check = openssl_verify($data, $signature, $public_key, OPENSSL_ALGO_SHA1);
+        openssl_free_key($public_key);
+		
+		
+		$order->setPasport($signature_check);
+		
+
 		}
 		else
 		{
-			$order->setDel(1);
+			//$order->setDel(1);
 			
 		}
 		$em->persist($order);

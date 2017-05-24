@@ -29,6 +29,12 @@ class PayController extends Controller
 		
 		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($order_id);
 		
+		if(null == $order->getStatus())
+		{
+			return $this->redirectToRoute('homepage');
+		}		
+		
+		
 		return ['order'=>$order, 'order_id'=>$order_id];
 	}
 	
@@ -69,8 +75,8 @@ class PayController extends Controller
 		
 		$url_redirect = "https://www.pps.gazprombank.ru:443/payment/start.wsm?lang=RU".
 			"&merch_id=819879E11103E1BD879D651446DE601B".
-			"&back_url_s=https://vodohod.spb.ru/smallfleet/order/success".
-			"&back_url_f=https://vodohod.spb.ru/smallfleet/order".
+			"&back_url_s=https://vodohod.spb.ru/smallfleet/success".
+			"&back_url_f=https://vodohod.spb.ru/smallfleet/".
 			"&o.order_id=$order_id"/*.
 			/*"&o.amount=".$sum*100*/ ;		
 		
@@ -84,7 +90,7 @@ class PayController extends Controller
 	
 	
     /**
-     * @Route("/mail/{id}", name="mail")
+     * @Route("/admin/mail/{id}", name="mail")
 	 * @Template()		 
      */
     public function mailAction(Request $request, $id = null)
@@ -101,24 +107,7 @@ class PayController extends Controller
 		
 		$order = $this->getDoctrine()->getRepository('CruiseBundle:Ordering')->findOneById($order_id);
 		$email = $order->getEmail();
-	
-		
-		$body = $this->render('CruiseBundle:Pay:ticket.html.twig',['order'=>$this->extOrder($order_id)])->getContent();
-		
-		//$dump = get_class_methods($this->get('knp_snappy.pdf'));
-
-		$file_pdf =  new Response(
-						$this->get('knp_snappy.pdf')->getOutputFromHtml($body)
-							);	
-		$file_img =  new Response(
-								$this->get('knp_snappy.image')->getOutputFromHtml($body),
-								200,
-								array(
-									'Content-Type'          => 'image/jpg',
-									'Content-Disposition'   => 'filename="image.jpg"'
-								)
-							);	
-		
+		$order = $this->extOrder($order);
 		
 		$mailer = $this->get('mailer');
 		$message = \Swift_Message::newInstance()
@@ -126,32 +115,43 @@ class PayController extends Controller
 			->setFrom(array('nobody@vodohod.com'=>'Интернет-магазин «ВодоходЪ СПб»'))
 			->setTo(array($email))
 			->setBcc(array('dkochetkov@vodohod.ru'))
-
-			->setBody("Спасибо за покупку!", 'text/html')
-			
-			->attach(\Swift_Attachment::newInstance()
-				  ->setFilename('Билет.pdf')
-				  ->setContentType('application/pdf')
-				  ->setBody($file_pdf))	
-			/*	  
-			->attach(\Swift_Attachment::newInstance()
-				  ->setFilename('Билет.jpg')
-				  ->setContentType('image/jpg')
-				  ->setBody($file_img->getContent()))
-			*/
-		;
-		$mailer->send($message);		
+			->setBody("Спасибо за покупку!", 'text/html')		
+			;	
 		
-		return ['body'=>$body];
+		//$body = $this->renderView('CruiseBundle:Pay:ticket.html.twig',['order'=>$order]);
+		
+		$cruises = $order;
+		
+		$bodyes = [];
+		
+		foreach($order->cruises as $cruise_id => $cruise)
+		{
+			 $bodyes[$cruise_id] = $body = $this->renderView('CruiseBundle:Pay:ticket.html.twig',['order'=>$order, 'cruiseId' => $cruise_id]);
+
+			$file_pdf =  new Response(
+							$this->get('knp_snappy.pdf')->getOutputFromHtml($body)
+								);	
+
+			$message->attach(\Swift_Attachment::newInstance()
+					  ->setFilename('Билет '.$order_id.' '.$cruise->getDirection()->getName().'.pdf')
+					  ->setContentType('application/pdf')
+					  ->setBody($file_pdf))	
+			;
+					
+		}
+		
+		$mailer->send($message);
+		
+		return ['cruises'=>$cruises,'bodyes'=>$bodyes];
 	}
 	
 
-    private function extOrder($id = null)
+    private function extOrder($order = null)
 	{
-		$order_id = $id;
-		
-        $em = $this->getDoctrine()->getManager();
-        $order = $em->getRepository('CruiseBundle:Ordering')->findOneById($order_id);			
+		//$order_id = $id;
+		//
+        //$em = $this->getDoctrine()->getManager();
+        //$order = $em->getRepository('CruiseBundle:Ordering')->findOneById($order_id);			
 		$cruises = [];
 		$category = [];
 		foreach($order->getOrderCruise() as $orderCruise)

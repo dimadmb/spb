@@ -164,7 +164,7 @@ table.footer td {
 		<td colspan="2">Билет на т/х «Метеор» №{{order.id}} </td>
 		
 	</tr>
-{% for cruise in order.cruises %}
+{% for cruise in order.cruises if cruise.id == cruiseId %}
 
 	<tr>
 		<td> &nbsp; </td>
@@ -194,10 +194,8 @@ table.footer td {
 	<tr>
 		<td>Маршрут</td>
 		<td>
-		{% if order.cruises|length == 2 %}
-		Санкт-Петербург – ГМЗ Петергоф – Санкт-Петербург
-		{% elseif order.cruises|length == 1 %}
-			{% for cruise in order.cruises %}
+
+			{% for cruise in order.cruises if cruise.id == cruiseId %}
 				
 				
 				{#{cruise.direction.name}#}
@@ -209,8 +207,7 @@ table.footer td {
 				ГМЗ Петергоф – Санкт-Петербург
 				{% endif %}
 			{% endfor %}
-		
-		{% endif %}
+
 		</td>
 	</tr>
 
@@ -232,7 +229,7 @@ table.footer td {
 
 	{% set item_summ = 0 %}
 	{% set item_price = 0 %}
-	{% for orderCruise in category.orderCruises %}
+	{% for orderCruise in category.orderCruises if orderCruise.cruise.id == cruiseId %}
 
 		{% set item_summ = item_summ + (orderCruise.price * orderCruise.count) %}
 		{% set item_price = item_price + (orderCruise.price ) %}
@@ -303,7 +300,7 @@ table.footer td {
 		<td colspan="2">Корешок Билета на т/х «Метеор» №{{order.id}} </td>
 		
 	</tr>
-{% for cruise in order.cruises %}
+{% for cruise in order.cruises if cruise.id == cruiseId %}
 
 	<tr>
 		<td> &nbsp; </td>
@@ -333,10 +330,8 @@ table.footer td {
 	<tr>
 		<td>Маршрут</td>
 		<td>
-		{% if order.cruises|length == 2 %}
-		Санкт-Петербург – ГМЗ Петергоф – Санкт-Петербург
-		{% elseif order.cruises|length == 1 %}
-			{% for cruise in order.cruises %}
+
+			{% for cruise in order.cruises if cruise.id == cruiseId %}
 				
 				
 				{#{cruise.direction.name}#}
@@ -348,8 +343,7 @@ table.footer td {
 				ГМЗ Петергоф – Санкт-Петербург
 				{% endif %}
 			{% endfor %}
-		
-		{% endif %}
+
 		</td>
 	</tr>
 
@@ -371,7 +365,7 @@ table.footer td {
 
 	{% set item_summ = 0 %}
 	{% set item_price = 0 %}
-	{% for orderCruise in category.orderCruises %}
+	{% for orderCruise in category.orderCruises if orderCruise.cruise.id == cruiseId %}
 
 		{% set item_summ = item_summ + (orderCruise.price * orderCruise.count) %}
 		{% set item_price = item_price + (orderCruise.price ) %}
@@ -424,7 +418,6 @@ table.footer td {
 		<td>{{order.email}}</td>
 	</tr>
 	
-
 
 
 	
